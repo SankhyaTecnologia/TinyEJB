@@ -18,3 +18,16 @@ Of course, any help is welcome to fill these gaps.
 
 For Stateless and Stateful Session Beans, TinyEJB implements EJB 2.1 spec with some cool additions, like Singleton Stateless, automatic 
 statefull method call synchronization (avoids the well known 'No concurrent calls on Stateful...' error message).
+
+
+Examples
+========
+
+To see it in action, check the test folder and execute them as plain Java Application (there are mocks for everything it needs).
+Additionally, it depends on some JARs, as follows:
+
+J2EE 1.4 interfaces 
+    http://www.java2s.com/Code/JarDownload/j2ee/j2ee-1.4.jar.zip
+
+JDom 1.1.3 
+    http://www.jdom.org/dist/binary/archive/jdom-1.1.3.zip
