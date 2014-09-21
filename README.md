@@ -7,7 +7,7 @@ modern JEE application servers that don't supports this specification anymore (o
 On this very first version, TinyEJB supports Stateless and Stateful Session Beans, including Container Managed Transactions (since JTA 
 is present on the runtime environment).
 
-For now, TinyEJB does NOT support:
+For now, TinyEJB does <b>NOT</b> support:
 
 * EJB as WebService end points
 * Timed Beans
