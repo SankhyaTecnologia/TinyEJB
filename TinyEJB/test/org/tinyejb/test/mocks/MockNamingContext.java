@@ -1,4 +1,4 @@
-package org.tinyejb.test;
+package org.tinyejb.test.mocks;
 
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -12,7 +12,7 @@ import javax.naming.NameParser;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 
-class MockNamingContext implements Context {
+public class MockNamingContext implements Context {
 	private Map<String, Object> bindings = new HashMap<String, Object>();
 
 	@Override

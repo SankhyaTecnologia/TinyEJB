@@ -1,4 +1,4 @@
-package org.tinyejb.test;
+package org.tinyejb.test.mocks;
 
 import java.util.ArrayList;
 import java.util.List;

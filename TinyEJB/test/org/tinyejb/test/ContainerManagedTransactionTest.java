@@ -7,7 +7,15 @@ import org.tinyejb.core.IJndiResolver;
 import org.tinyejb.core.JBossJndiResolver;
 import org.tinyejb.test.ejbs.stateless.InvoiceFacade;
 import org.tinyejb.test.ejbs.stateless.InvoiceFacadeHome;
-
+import org.tinyejb.test.mocks.MockNamingContext;
+import org.tinyejb.test.mocks.MockTransacionManager;
+/**
+ * Demonstrates the use of Container Managed Transactions with TinyEJB
+ * 
+ * @author Cláudio Gualberto
+ * 20/09/2014
+ *
+ */
 public class ContainerManagedTransactionTest {
 	private EJBContainer ejbContainer;
 	private Context jndiContext;
@@ -35,11 +43,11 @@ public class ContainerManagedTransactionTest {
 
 		InvoiceFacade bean = home.create();
 
-		//this call must rollback the transaction
+		//this call must rollback the transaction, by setRollbackOnly()
 		bean.removeInvoiceRollingBack();
 		
 		try{
-			
+			//this call must rollback the transaction, by throwing system exception (EJBExcetion)
 			bean.removeInvoiceThrowingSystemException();
 			
 		}catch(Exception ignored ){}
@@ -61,7 +69,7 @@ public class ContainerManagedTransactionTest {
 		      
 		 In this example, the file is named tinyjboss.xml, but naturally it can be named as you can, but it must be compliant with jboss_4_0.dtd     
 		 */
-		IJndiResolver jndi = JBossJndiResolver.buildFromJBossDescriptor(CartTest.class.getResourceAsStream("/tinyjboss.xml"));
+		IJndiResolver jndi = JBossJndiResolver.buildFromJBossDescriptor(CartTest.class.getResourceAsStream("/tinyejb-jboss.xml"));
 
 		ejbContainer.setJndiResolver(jndi);
 
@@ -69,7 +77,7 @@ public class ContainerManagedTransactionTest {
 		   client code must locate and load ejb-jar.xml from classpath or wherever it can be.
 		   Naturally, the file name is irrelevant for TinyEJB container, but it must be, at least, compliant with EJB 2.0 XML DTD or EJB 2.1 schema  
 		*/
-		ejbContainer.deployModuleFromDescriptor(CartTest.class.getResourceAsStream("/tinyejb-jar.xml"));
+		ejbContainer.deployModuleFromDescriptor(CartTest.class.getResourceAsStream("/tinyejb-ejb-jar.xml"));
 
 	}
 
