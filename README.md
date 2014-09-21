@@ -23,7 +23,7 @@ statefull method call synchronization (avoids the well known 'No concurrent call
 Examples
 ========
 
-To see it in action, check the test folder and execute them as plain Java Application (there are mocks for everything it needs).
+To see TinyEJB in action, check the test folder and execute them as plain Java Application (there are mocks for everything it needs).
 Additionally, it depends on some JARs, as follows:
 
 J2EE 1.4 interfaces 
