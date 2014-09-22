@@ -4,18 +4,18 @@ import java.util.Random;
 
 import javax.naming.Context;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tinyejb.core.EJBContainer;
 import org.tinyejb.core.IJndiResolver;
 import org.tinyejb.core.JBossJndiResolver;
-import org.tinyejb.test.ejbs.stateful.Cart;
-import org.tinyejb.test.ejbs.stateful.CartHome;
-import org.tinyejb.test.ejbs.stateful.CartItem;
 import org.tinyejb.test.ejbs.stateless.InvoiceFacade;
 import org.tinyejb.test.ejbs.stateless.InvoiceFacadeHome;
 import org.tinyejb.test.mocks.MockNamingContext;
 import org.tinyejb.test.mocks.MockTransacionManager;
 
 public class InvoiceTest {
+	private final static Logger LOGGER = LoggerFactory.getLogger(InvoiceTest.class);
 	private EJBContainer ejbContainer;
 	private Context jndiContext;
 
@@ -33,7 +33,7 @@ public class InvoiceTest {
 	}
 
 	private void test() throws Exception {
-		System.out.println("\n\n**** CONCURRENT CALLS ON STATELESS****\n");
+		LOGGER.debug("\n\n**** CONCURRENT CALLS ON STATELESS****\n");
 
 		initContainer();
 
@@ -45,9 +45,9 @@ public class InvoiceTest {
 
 		final InvoiceFacade bean = home.create();
 
-		System.out.println("Total with fees: " + bean.insertInvoice(30000, 15));
+		LOGGER.debug("Total with fees: " + bean.insertInvoice(30000, 15));
 
-		System.out.println("Inserting invoices concurrently...");
+		LOGGER.debug("Inserting invoices concurrently...");
 		
 		/*
 		  if we are using default configuration (compliant with EJB spec thread-safe rules) we won't see any errors.

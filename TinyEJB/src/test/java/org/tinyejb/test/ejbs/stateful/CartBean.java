@@ -4,37 +4,40 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
 import javax.ejb.EJBException;
 import javax.ejb.SessionBean;
 import javax.ejb.SessionContext;
 import javax.ejb.SessionSynchronization;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class CartBean implements SessionBean, SessionSynchronization {
+	private final static Logger LOGGER = LoggerFactory.getLogger(CartBean.class);
 	private SessionContext ctx;
 	private List<CartItem> cartItems;
 	private String customerName;
 
 	public void ejbCreate(String customerName) throws EJBException {
-		System.out.println("CartBean.ejbCreate(customerName) = (" + customerName + ")");
+		LOGGER.debug("CartBean.ejbCreate(customerName) = (" + customerName + ")");
 		this.customerName = customerName;
 		this.cartItems = new ArrayList<CartItem>();
 	}
 
 	@Override
 	public void ejbActivate() throws EJBException, RemoteException {
-		System.out.println("CartBean.ejbActivate()");
+		LOGGER.debug("CartBean.ejbActivate()");
 	}
 
 	@Override
 	public void ejbPassivate() throws EJBException, RemoteException {
-		System.out.println("CartBean.ejbPassivate()");
+		LOGGER.debug("CartBean.ejbPassivate()");
 	}
 
 	@Override
 	public void ejbRemove() throws EJBException, RemoteException {
-		System.out.println("CartBean.ejbRemove()");
+		LOGGER.debug("CartBean.ejbRemove()");
 	}
 
 	@Override
@@ -43,17 +46,17 @@ public class CartBean implements SessionBean, SessionSynchronization {
 	}
 
 	public void addItem(CartItem item) {
-		System.out.println("CartBean.addItem()");
+		LOGGER.debug("CartBean.addItem()");
 		cartItems.add(item);
 	}
 
 	public void listItems() {
-		System.out.println("CartBean.listItems()");
+		LOGGER.debug("CartBean.listItems()");
 		
-		System.out.println("listing shopping cart for customer " + customerName);
+		LOGGER.debug("listing shopping cart for customer " + customerName);
 		int i = 1;
 		for (CartItem item : cartItems) {
-			System.out.println("#" + i + " - " + item);
+			LOGGER.debug("#" + i + " - " + item);
 			i++;
 		}
 	}
@@ -81,16 +84,16 @@ public class CartBean implements SessionBean, SessionSynchronization {
 	
 	@Override
 	public void afterBegin() throws EJBException, RemoteException {
-		System.out.println("CartBean.afterBegin()");
+		LOGGER.debug("CartBean.afterBegin()");
 	}
 
 	@Override
 	public void afterCompletion(boolean b) throws EJBException, RemoteException {
-		System.out.println("CartBean.afterCompletion(): " + b);
+		LOGGER.debug("CartBean.afterCompletion(): " + b);
 	}
 
 	@Override
 	public void beforeCompletion() throws EJBException, RemoteException {
-		System.out.println("CartBean.beforeCompletion()");
+		LOGGER.debug("CartBean.beforeCompletion()");
 	}
 }

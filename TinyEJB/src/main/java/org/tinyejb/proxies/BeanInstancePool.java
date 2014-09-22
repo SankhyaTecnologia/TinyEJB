@@ -9,17 +9,19 @@ import java.util.Map;
 
 import javax.ejb.SessionBean;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tinyejb.core.EJBMetadata;
-import org.tinyejb.utils.Logger;
 
 /**
  * Stateless SessionBean instance pool
  * 
- * @author Cláudio Gualberto
+ * @author Clï¿½udio Gualberto
  * 19/09/2014
  *
  */
 public class BeanInstancePool {
+	private final static Logger LOGGER = LoggerFactory.getLogger(BeanInstancePool.class);
 	//EJB that owns this pool
 	private EJBMetadata ejbMetadata;
 
@@ -85,7 +87,7 @@ public class BeanInstancePool {
 				}
 			}
 			if (removedCount > 0) {
-				Logger.log(removedCount + " SessionBean instances removed from '" + ejbMetadata.getName() + "'s pool.");
+				LOGGER.info(removedCount + " SessionBean instances removed from '" + ejbMetadata.getName() + "'s pool.");
 			}
 		}
 	}
@@ -126,7 +128,7 @@ public class BeanInstancePool {
 
 		@Override
 		public void run() {
-			Logger.log("Starting InstancePool resizer task");
+			LOGGER.info("Starting InstancePool resizer task");
 
 			try {
 				while (!Thread.currentThread().isInterrupted()) {
@@ -151,7 +153,7 @@ public class BeanInstancePool {
 				}
 			} catch (Exception ignored) {
 			} finally {
-				Logger.log("InstancePool resizer finalized");
+				LOGGER.info("InstancePool resizer finalized");
 			}
 
 		}
@@ -161,7 +163,7 @@ public class BeanInstancePool {
 	 * Interface for the Bean instance factory
 	 * The pool delegates instance creation for it
 	 * 
-	 * @author Cláudio Gualberto
+	 * @author Clï¿½udio Gualberto
 	 * 19/09/2014
 	 *
 	 */

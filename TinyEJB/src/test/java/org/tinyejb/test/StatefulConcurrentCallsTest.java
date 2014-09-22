@@ -2,6 +2,8 @@ package org.tinyejb.test;
 
 import javax.naming.Context;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tinyejb.core.EJBContainer;
 import org.tinyejb.core.IJndiResolver;
 import org.tinyejb.core.JBossJndiResolver;
@@ -12,6 +14,7 @@ import org.tinyejb.test.mocks.MockNamingContext;
 import org.tinyejb.test.mocks.MockTransacionManager;
 
 public class StatefulConcurrentCallsTest {
+	private final static Logger LOGGER = LoggerFactory.getLogger(StatefulConcurrentCallsTest.class);
 	private EJBContainer ejbContainer;
 	private Context jndiContext;
 
@@ -29,7 +32,7 @@ public class StatefulConcurrentCallsTest {
 	}
 
 	private void test() throws Exception {
-		System.out.println("\n\n**** CONCURRENT CALLS ON STATEFUL ****\n");
+		LOGGER.debug("\n\n**** CONCURRENT CALLS ON STATEFUL ****\n");
 
 		initContainer();
 
@@ -64,7 +67,7 @@ public class StatefulConcurrentCallsTest {
 				while (true) {
 					try {
 						int removeCount = bean.removeItem("Capital, by Thomas Piketty");
-						System.out.println(removeCount + " items removed");
+						LOGGER.debug(removeCount + " items removed");
 						Thread.currentThread().sleep(10);
 					} catch (Exception e) {
 						throw new IllegalStateException(e);

@@ -7,17 +7,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBObject;
 import javax.ejb.SessionBean;
 import javax.naming.Context;
-import javax.naming.InitialContext;
 import javax.transaction.TransactionManager;
 
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tinyejb.core.EJBMetadata.BEAN_TYPE;
 import org.tinyejb.core.EJBMetadata.EJBMethodTransactionInfo;
 import org.tinyejb.core.EJBMetadata.EJBMethodTransactionInfo.METHOD_INTF;
@@ -25,14 +25,15 @@ import org.tinyejb.core.EJBMetadata.TRANSACTION_MANAGED_BY;
 import org.tinyejb.core.EJBMetadata.TRANSACTION_TYPE;
 import org.tinyejb.proxies.EJBHomeBuilder;
 import org.tinyejb.proxies.IEJBHome;
-import org.tinyejb.utils.Logger;
 import org.tinyejb.utils.XMLStuff;
 
 public class EJBContainer {
+	private final static Logger LOGGER = LoggerFactory.getLogger(EJBContainer.class);
 	private Map<String, EJBMetadata> deployedBeans;
 	private IJndiResolver jndiResolver;
 	private TransactionManager txManager;
 	private Context jndiContext;
+	
 
 	/*
 	 EJB 2.1 spec session 7.12.10 determines that a session bean instance must be thread-safe.
@@ -86,7 +87,7 @@ public class EJBContainer {
 			throw new IllegalArgumentException("null InputStream for deployment descriptor.");
 		}
 
-		Logger.log("starting module deploy ...");
+		LOGGER.info("starting module deploy ...");
 
 		Element xml = XMLStuff.buildDomDocument(ejbDDInputStream).getRootElement();
 
@@ -98,7 +99,7 @@ public class EJBContainer {
 			List sessionBeans = enterpriseBeansElem.getChildren("session");
 
 			if (sessionBeans.isEmpty()) {
-				Logger.log("There is no session-bean on descriptor file");
+				LOGGER.info("There is no session-bean on descriptor file");
 			} else {
 				Map<String, List<EJBMethodTransactionInfo>> listOfMethods = processAssemblyDescriptor(xml);
 
@@ -113,7 +114,7 @@ public class EJBContainer {
 						if (lstTXInfo != null) {
 							ejbmd.addMethodTransactionInfo(lstTXInfo);
 						} else {
-							Logger.log("no transaction info for bean '" + ejbmd.getName() + "'. Assuming 'Required' as default for all business methods.");
+							LOGGER.info("no transaction info for bean '" + ejbmd.getName() + "'. Assuming 'Required' as default for all business methods.");
 						}
 
 						if (deployIt(ejbmd)) {
@@ -124,7 +125,7 @@ public class EJBContainer {
 			}
 		}
 
-		Logger.log("Total of " + beanCount + " bean(s) deployed.");
+		LOGGER.info("Total of " + beanCount + " bean(s) deployed.");
 
 	}
 
@@ -133,12 +134,12 @@ public class EJBContainer {
 		 Undeploy process just unbinds home interfaces.
 		 Any thread using beans from this EJBContainer can have unexpected results.
 		 */
-		Logger.log("Undeploying " + deployedBeans.size() + " EJBs ...");
+		LOGGER.info("Undeploying " + deployedBeans.size() + " EJBs ...");
 
 		status.set(ContainerStatus.SHUT_DOWN);
 
 		for (EJBMetadata ejbmd : deployedBeans.values()) {
-			Logger.log("undeploying '" + ejbmd.getName() + "' ...");
+			LOGGER.info("undeploying '" + ejbmd.getName() + "' ...");
 
 			for (String jndiName : ejbmd.getJndiNames()) {
 				try {
@@ -150,13 +151,13 @@ public class EJBContainer {
 			}
 		}
 
-		Logger.log("Undeploy done.");
+		LOGGER.info("Undeploy done.");
 	}
 
 	private boolean deployIt(EJBMetadata ejbmd) throws Exception {
 		try {
 
-			Logger.log("deploying " + ejbmd.getType() + " SessionBean '" + ejbmd.getName() + "' ...");
+			LOGGER.info("deploying " + ejbmd.getType() + " SessionBean '" + ejbmd.getName() + "' ...");
 			int bindCount = 0;
 
 			if (ejbmd.getHomeIntf() != null) {
@@ -173,7 +174,7 @@ public class EJBContainer {
 				}
 
 				IEJBHome home = EJBHomeBuilder.build(ejbmd, this, METHOD_INTF.Home);
-				Logger.log(ejbmd.getName() + ": remote factory bound to JNDI entry '" + jndiName + "'");
+				LOGGER.info(ejbmd.getName() + ": remote factory bound to JNDI entry '" + jndiName + "'");
 				jndiContext.bind(jndiName, home);
 				ejbmd.addJndiName(jndiName);
 				bindCount++;
@@ -193,7 +194,7 @@ public class EJBContainer {
 				}
 
 				IEJBHome home = EJBHomeBuilder.build(ejbmd, this, METHOD_INTF.LocalHome);
-				Logger.log(ejbmd.getName() + ": local factory bound to JNDI entry '" + jndiName + "'");
+				LOGGER.info(ejbmd.getName() + ": local factory bound to JNDI entry '" + jndiName + "'");
 				jndiContext.bind(jndiName, home);
 				ejbmd.addJndiName(jndiName);
 				bindCount++;
@@ -201,14 +202,14 @@ public class EJBContainer {
 
 			if (bindCount > 0) {
 				deployedBeans.put(ejbmd.getName(), ejbmd);
-				Logger.log("'" + ejbmd.getName() + "' deployed on " + bindCount + " factories.");
+				LOGGER.info("'" + ejbmd.getName() + "' deployed on " + bindCount + " factories.");
 			} else {
-				Logger.log("Deploy of bean '" + ejbmd.getName() + "' canceled. No JNDI definition.");
+				LOGGER.info("Deploy of bean '" + ejbmd.getName() + "' canceled. No JNDI definition.");
 			}
 
 			return bindCount > 0;
 		} catch (Exception e) {
-			Logger.log("Error when deploying " + ejbmd.getName() + ": " + e.getMessage());
+			LOGGER.info("Error when deploying " + ejbmd.getName() + ": " + e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -230,10 +231,10 @@ public class EJBContainer {
 			String remoteIntf = XMLStuff.getChildElementText(beanElem, "remote");
 
 			if ((localHomeIntf == null && localIntf != null) || (localHomeIntf != null && localIntf == null)) {
-				Logger.log("local and local-home interfaces must be declared together or neither at all");
+				LOGGER.info("local and local-home interfaces must be declared together or neither at all");
 			} else {
 				if ((remoteHomeIntf == null && remoteIntf != null) || (remoteHomeIntf != null && remoteIntf == null)) {
-					Logger.log("home and remote interfaces must be declared together or neither at all");
+					LOGGER.info("home and remote interfaces must be declared together or neither at all");
 				} else {
 					EJBMetadata ejbm = new EJBMetadata(name, sessionType, txManagedBy, this);
 
@@ -246,7 +247,7 @@ public class EJBContainer {
 					try {
 						checkEJBSpecViolations(ejbm);
 					} catch (Exception e) {
-						Logger.log("Error when deploying '" + name + "': " + e.getMessage());
+						LOGGER.info("Error when deploying '" + name + "': " + e.getMessage());
 					}
 
 					return ejbm;

@@ -5,8 +5,11 @@ import java.io.InputStream;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class XMLStuff {
+	private final static Logger LOGGER = LoggerFactory.getLogger(XMLStuff.class);
 	public static boolean checkRequiredChildren(Element xmlElem, String... elements) {
 		int errors = 0;
 
@@ -14,7 +17,7 @@ public class XMLStuff {
 			Element elem = xmlElem.getChild(elemName);
 
 			if (elem == null) {
-				Logger.log("element <" + xmlElem.getName() + "> must contain <" + elemName + "> as a child element");
+				LOGGER.info("element <" + xmlElem.getName() + "> must contain <" + elemName + "> as a child element");
 				errors++;
 			}
 		}

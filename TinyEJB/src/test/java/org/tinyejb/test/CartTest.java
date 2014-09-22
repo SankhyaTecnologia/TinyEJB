@@ -2,6 +2,8 @@ package org.tinyejb.test;
 
 import javax.naming.Context;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tinyejb.core.EJBContainer;
 import org.tinyejb.core.IJndiResolver;
 import org.tinyejb.core.JBossJndiResolver;
@@ -14,11 +16,12 @@ import org.tinyejb.test.mocks.MockTransacionManager;
 /**
  * Demonstrates the use of TinyEJB container with stateful session bean
  * 
- * @author Cláudio Gualberto
+ * @author Clï¿½udio Gualberto
  * 20/09/2014
  *
  */
 public class CartTest {
+	private final static Logger LOGGER = LoggerFactory.getLogger(CartTest.class);
 	private EJBContainer ejbContainer;
 	private Context jndiContext;
 
@@ -41,7 +44,7 @@ public class CartTest {
 
 		initContainer();
 
-		System.out.println("\n\n**** CART BEAN (STATEFUL) ****\n");
+		LOGGER.debug("\n\n**** CART BEAN (STATEFUL) ****\n");
 
 		//On this example, we'll use local interfaces
 		CartLocalHome home = (CartLocalHome) jndiContext.lookup(CartLocalHome.JNDI_NAME);

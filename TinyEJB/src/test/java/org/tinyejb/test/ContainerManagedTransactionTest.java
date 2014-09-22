@@ -2,6 +2,8 @@ package org.tinyejb.test;
 
 import javax.naming.Context;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tinyejb.core.EJBContainer;
 import org.tinyejb.core.IJndiResolver;
 import org.tinyejb.core.JBossJndiResolver;
@@ -12,11 +14,12 @@ import org.tinyejb.test.mocks.MockTransacionManager;
 /**
  * Demonstrates the use of Container Managed Transactions with TinyEJB
  * 
- * @author Cláudio Gualberto
+ * @author Clï¿½udio Gualberto
  * 20/09/2014
  *
  */
 public class ContainerManagedTransactionTest {
+	private final static Logger LOGGER = LoggerFactory.getLogger(ContainerManagedTransactionTest.class);
 	private EJBContainer ejbContainer;
 	private Context jndiContext;
 
@@ -34,7 +37,7 @@ public class ContainerManagedTransactionTest {
 	}
 
 	private void test() throws Exception {
-		System.out.println("\n\n**** CMT TESTS****\n");
+		LOGGER.debug("\n\n**** CMT TESTS****\n");
 
 		initContainer();
 

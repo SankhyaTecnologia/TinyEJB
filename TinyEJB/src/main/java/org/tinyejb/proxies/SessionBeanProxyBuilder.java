@@ -14,7 +14,6 @@ import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBObject;
 import javax.ejb.Handle;
 import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
 import javax.ejb.SessionSynchronization;
 import javax.ejb.TransactionRequiredLocalException;
 import javax.transaction.Status;
@@ -23,15 +22,17 @@ import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 import javax.transaction.TransactionRequiredException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tinyejb.core.EJBContainer;
 import org.tinyejb.core.EJBMetadata;
 import org.tinyejb.core.EJBMetadata.BEAN_TYPE;
 import org.tinyejb.core.EJBMetadata.EJBMethodTransactionInfo;
-import org.tinyejb.core.EJBMetadata.TRANSACTION_TYPE;
 import org.tinyejb.core.EJBMetadata.EJBMethodTransactionInfo.METHOD_INTF;
-import org.tinyejb.utils.Logger;
+import org.tinyejb.core.EJBMetadata.TRANSACTION_TYPE;
 
 public class SessionBeanProxyBuilder {
+	private final static Logger LOGGER = LoggerFactory.getLogger(SessionBeanProxyBuilder.class);
 	public static ISessionEJB build(EJBMetadata ejbMetadata, Object homeProxy, METHOD_INTF methodIntf) throws Exception {
 		SessionEJBProxy proxyIH = new SessionEJBProxy(ejbMetadata, homeProxy);
 
@@ -157,16 +158,16 @@ public class SessionBeanProxyBuilder {
 				if (ejbMetadata.isStateless()) {
 					/*
 					 EJB spec 6.9.2
-					 todos os EJBs stateless criados pela mesma home sempre serão idênticos, independente de instância do SessionBean
+					 todos os EJBs stateless criados pela mesma home sempre serï¿½o idï¿½nticos, independente de instï¿½ncia do SessionBean
 					*/
 					return homeProxy == (ejbMetadata.isLocalObjectInterface(m) ? ((EJBLocalObject) args[0]).getEJBLocalHome() : ((EJBObject) args[0]).getEJBHome());
 				}
 
 				/*
 				 EJB spec 6.9.1
-				 Stateful session beans devem possuir uma identidade única.
-				 Considerando que cada EJB deste tipo possui uma instância de proxy para cada instância de SessionBean, então
-				 um bean será considerado idêntico ao outro caso ambos possuam o mesmo proxy.
+				 Stateful session beans devem possuir uma identidade ï¿½nica.
+				 Considerando que cada EJB deste tipo possui uma instï¿½ncia de proxy para cada instï¿½ncia de SessionBean, entï¿½o
+				 um bean serï¿½ considerado idï¿½ntico ao outro caso ambos possuam o mesmo proxy.
 				 */
 				return beanProxy == args[0];
 			} catch (Exception e) {
@@ -176,10 +177,10 @@ public class SessionBeanProxyBuilder {
 
 		private void callRemoveOnBean() throws Exception {
 			if (isStateless()) {
-				Logger.log("ignoring remove() call on stateless bean");
+				LOGGER.info("ignoring remove() call on stateless bean");
 			} else {//Stateful
 				try {
-					//Segundo a especificação EJB 2.x a chamada a ejbRemove() é feita em um contexto não transacional.
+					//Segundo a especificaï¿½ï¿½o EJB 2.x a chamada a ejbRemove() ï¿½ feita em um contexto nï¿½o transacional.
 					beanDelegate.getClass().getMethod("ejbRemove", null).invoke(beanDelegate, null);
 				} catch (NoSuchMethodException e) {
 					throw new IllegalStateException("No ejbRemove() method found on '" + ejbMetadata.getName() + ".");
@@ -341,7 +342,7 @@ public class SessionBeanProxyBuilder {
 		private void assertRollbackOnly(TransactionManager txManager) throws Exception {
 			Transaction tx = txManager.getTransaction();
 			if (tx != null && tx.getStatus() != Status.STATUS_MARKED_ROLLBACK) {
-				Logger.log("System exception, so transaction will rollback!");
+				LOGGER.info("System exception, so transaction will rollback!");
 				tx.setRollbackOnly();
 			}
 		}
@@ -355,14 +356,14 @@ public class SessionBeanProxyBuilder {
 				tx.commit();
 			}
 
-			txManager.suspend(); //desvinculamos a TX da Thread atual, pois ela já não tem utilidade
+			txManager.suspend(); //desvinculamos a TX da Thread atual, pois ela jï¿½ nï¿½o tem utilidade
 		}
 	}
 
 	/**
 	 * Method call serializer for Stateful beans
 	 * 
-	 * @author Cláudio Gualberto
+	 * @author Clï¿½udio Gualberto
 	 * 20/09/2014
 	 *
 	 */
@@ -391,7 +392,7 @@ public class SessionBeanProxyBuilder {
 					if (System.currentTimeMillis() - start > ejbmd.getEjbContainer().getConcurrentCallWaitTimeout()) {
 						throw new IllegalStateException("Timeout waiting for method call on Statefull bean. Method using the instance: '" + beanProxyHnd.statefulMethodLock[0].getName() + "'");
 					}
-					Logger.log(m.getName() + " waiting for " + beanProxyHnd.statefulMethodLock[0].getName());
+					LOGGER.info(m.getName() + " waiting for " + beanProxyHnd.statefulMethodLock[0].getName());
 					beanProxyHnd.statefulMethodLock.wait(1000);
 				}
 				beanProxyHnd.statefulMethodLock[0] = m;
@@ -413,7 +414,7 @@ public class SessionBeanProxyBuilder {
 
 				if (milliseconds > 0) {
 					milliseconds = new Random().nextInt(milliseconds);
-					Logger.log("sleeping randomly for " + (milliseconds / 1000) + " secs");
+					LOGGER.info("sleeping randomly for " + (milliseconds / 1000) + " secs");
 					Thread.sleep(new Random().nextInt(milliseconds));
 				}
 			} catch (Exception ignored) {

@@ -6,32 +6,36 @@ import javax.ejb.EJBException;
 import javax.ejb.SessionBean;
 import javax.ejb.SessionContext;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class InvoiceFacadeBean implements SessionBean {
+	private final static Logger LOGGER = LoggerFactory.getLogger(InvoiceFacadeBean.class);
 	private SessionContext ctx;
 	private double productsTotalPrice; //just to prove the thread-safeness of a stateless session bean (or not, if its a singleton)
 
 	public void ejbCreate() throws EJBException {
-		System.out.println("ServiceBean.ejbCreate()");
+		LOGGER.debug("ServiceBean.ejbCreate()");
 	}
 
 	@Override
 	public void ejbActivate() throws EJBException, RemoteException {
-		System.out.println("ServiceBean.ejbActivate()");
+		LOGGER.debug("ServiceBean.ejbActivate()");
 	}
 
 	@Override
 	public void ejbPassivate() throws EJBException, RemoteException {
-		System.out.println("ServiceBean.ejbPassivate()");
+		LOGGER.debug("ServiceBean.ejbPassivate()");
 	}
 
 	@Override
 	public void ejbRemove() throws EJBException, RemoteException {
-		System.out.println("ServiceBean.ejbRemove()");
+		LOGGER.debug("ServiceBean.ejbRemove()");
 	}
 
 	@Override
 	public void setSessionContext(SessionContext ctx) throws EJBException {
-		System.out.println("ServiceBean.setSessionContext()");
+		LOGGER.debug("ServiceBean.setSessionContext()");
 		this.ctx = ctx;
 	}
 

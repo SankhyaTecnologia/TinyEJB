@@ -15,16 +15,18 @@ import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 import javax.transaction.xa.XAResource;
 
-import org.tinyejb.utils.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MockTransacionManager implements TransactionManager {
+	private final static Logger LOGGER = LoggerFactory.getLogger(MockTransacionManager.class);
 	private static ThreadLocal<Transaction> current = new ThreadLocal<Transaction>();
 
 	@Override
 	public void begin() throws NotSupportedException, SystemException {
 		Transaction tx = new MockTransacion();
 		current.set(tx);
-		Logger.log("Transaction started!!");
+		LOGGER.debug("Transaction started!!");
 	}
 
 	@Override
@@ -53,7 +55,7 @@ public class MockTransacionManager implements TransactionManager {
 
 	@Override
 	public void resume(Transaction tx) throws InvalidTransactionException, IllegalStateException, SystemException {
-		Logger.log("Transaction resumed!!");
+		LOGGER.debug("Transaction resumed!!");
 		current.set(tx);
 	}
 
@@ -75,7 +77,7 @@ public class MockTransacionManager implements TransactionManager {
 	public Transaction suspend() throws SystemException {
 		Transaction tx = current.get();
 		current.remove();
-		Logger.log("Transaction suspended!!");
+		LOGGER.debug("Transaction suspended!!");
 		return tx;
 	}
 
@@ -94,7 +96,7 @@ public class MockTransacionManager implements TransactionManager {
 			callBeforeCompletion();
 
 			status = Status.STATUS_COMMITTED;
-			Logger.log("Transaction commited!!");
+			LOGGER.debug("Transaction commited!!");
 
 			callAfterCompletion();
 		}
@@ -148,7 +150,7 @@ public class MockTransacionManager implements TransactionManager {
 			callBeforeCompletion();
 
 			status = Status.STATUS_ROLLEDBACK;
-			Logger.log("Transaction RolledBack!!");
+			LOGGER.debug("Transaction RolledBack!!");
 
 			callAfterCompletion();
 		}
@@ -165,7 +167,7 @@ public class MockTransacionManager implements TransactionManager {
 
 			status = Status.STATUS_MARKED_ROLLBACK;
 
-			Logger.log("Transaction marked to rollback");
+			LOGGER.debug("Transaction marked to rollback");
 		}
 
 	}

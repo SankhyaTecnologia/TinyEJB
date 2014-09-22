@@ -3,13 +3,11 @@ package org.tinyejb.core;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
-import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.input.SAXBuilder;
-import org.tinyejb.utils.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tinyejb.utils.XMLStuff;
 
 /**
@@ -18,12 +16,14 @@ import org.tinyejb.utils.XMLStuff;
  * 
  * Other elements defined on jboss_x.dtd are simply ignored. 
  * 
- * @author Cláudio Gualberto
+ * @author Clï¿½udio Gualberto
  * 
  * 19/09/2014
  *
  */
 public class JBossJndiResolver implements IJndiResolver {
+	private final static Logger LOGGER = LoggerFactory.getLogger(JBossJndiResolver.class);
+
 	private Map<String, BeanEntry> entries = new HashMap<String, JBossJndiResolver.BeanEntry>();
 
 	public static IJndiResolver buildFromJBossDescriptor(InputStream descriptorInput) throws Exception {
@@ -49,7 +49,7 @@ public class JBossJndiResolver implements IJndiResolver {
 							be.remoteHomeName = XMLStuff.getChildElementText(sessionElem, "jndi-name");
 							result.entries.put(name, be);
 						} else {
-							Logger.log("Duplicated bean definition on JBoss descriptor: " + name);
+							LOGGER.info("Duplicated bean definition on JBoss descriptor: " + name);
 						}
 					}
 				}
