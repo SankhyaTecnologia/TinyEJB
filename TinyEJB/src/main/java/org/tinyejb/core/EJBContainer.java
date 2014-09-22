@@ -247,7 +247,7 @@ public class EJBContainer {
 					try {
 						checkEJBSpecViolations(ejbm);
 					} catch (Exception e) {
-						LOGGER.info("Error when deploying '" + name + "': " + e.getMessage());
+						LOGGER.error("Error when deploying '" + name + "': " + e.getMessage());
 					}
 
 					return ejbm;

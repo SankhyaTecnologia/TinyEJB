@@ -7,7 +7,7 @@ import javax.ejb.EJBObject;
 /**
  * Remote business interface for Cart bean
  * 
- * @author Cl·udio Gualberto
+ * @author Cl√°udio Gualberto
  * 20/09/2014
  *
  */

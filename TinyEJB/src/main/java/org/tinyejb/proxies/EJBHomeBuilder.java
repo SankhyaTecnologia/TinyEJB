@@ -28,7 +28,7 @@ import org.tinyejb.proxies.BeanInstancePool.BeanInstanceFactory;
 /**
  * Builder for home interfaces
  * 
- * @author Cl·udio Gualberto
+ * @author Cl√°udio Gualberto
  * 19/09/2014
  *
  */
@@ -54,7 +54,7 @@ public class EJBHomeBuilder {
 	 * Home proxy for beans.
 	 * Acts as a factory for EJB instances
 	 * 
-	 * @author Cl·udio Gualberto
+	 * @author Cl√°udio Gualberto
 	 * 19/09/2014
 	 *
 	 */

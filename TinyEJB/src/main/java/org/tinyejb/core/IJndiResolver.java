@@ -6,7 +6,7 @@ package org.tinyejb.core;
  *  
  * If your application is dependent on another path, you can implements this interface and configure EJBContainer to use it.
  *  
- * @author Cl·udio Gualberto
+ * @author Cl√°udio Gualberto
  * 19/09/2014
  *
  */

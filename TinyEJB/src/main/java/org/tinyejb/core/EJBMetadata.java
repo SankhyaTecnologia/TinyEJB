@@ -32,7 +32,7 @@ public class EJBMetadata {
 
 	public void addMethodTransactionInfo(List<EJBMethodTransactionInfo> mList) {
 		for (EJBMethodTransactionInfo m : mList) {
-			if (m.getName().equals("*")) { //default para marcaÁ„o de TX padr„o
+			if (m.getName().equals("*")) { //default para marca√ß√£o de TX padr√£o
 				this.defaultTxType = m.txType;
 			} else {
 				methodsTransactionInfo.put(m.getSignature(), m);

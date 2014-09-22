@@ -5,7 +5,7 @@ import javax.ejb.EJBHome;
 /**
  * Remote home interface for Cart bean
  * 
- * @author Cl·udio Gualberto
+ * @author Cl√°udio Gualberto
  * 20/09/2014
  *
  */
