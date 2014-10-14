@@ -65,12 +65,10 @@ public class InvoiceTest {
 	}
 
 	private static class ConcurrentTask implements Runnable {
-		private int maxRandomValue;
 		private Random random = new Random();
 		private InvoiceFacade bean;
 
 		ConcurrentTask(InvoiceFacade bean, int maxRandomValue) {
-			this.maxRandomValue = maxRandomValue;
 			this.bean = bean;
 		}
 
@@ -114,7 +112,7 @@ public class InvoiceTest {
 		      
 		 In this example, the file is named tinyjboss.xml, but naturally it can be named as you can, but it must be compliant with jboss_4_0.dtd     
 		 */
-		IJndiResolver jndi = JBossJndiResolver.buildFromJBossDescriptor(CartTest.class.getResourceAsStream("/tinyejb-jboss.xml"));
+		IJndiResolver jndi = JBossJndiResolver.buildFromJBossDescriptor(getClass().getResourceAsStream("/tinyejb-jboss.xml"));
 
 		ejbContainer.setJndiResolver(jndi);
 
@@ -122,7 +120,7 @@ public class InvoiceTest {
 		   client code must locate and load ejb-jar.xml from classpath or wherever it can be.
 		   Naturally, the file name is irrelevant for TinyEJB container, but it must be, at least, compliant with EJB 2.0 XML DTD or EJB 2.1 schema  
 		*/
-		ejbContainer.deployModuleFromDescriptor(CartTest.class.getResourceAsStream("/tinyejb-ejb-jar.xml"));
+		ejbContainer.deployModuleFromDescriptor(getClass().getResourceAsStream("/tinyejb-ejb-jar.xml"));
 
 	}
 

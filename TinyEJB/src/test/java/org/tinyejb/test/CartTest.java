@@ -16,7 +16,7 @@ import org.tinyejb.test.mocks.MockTransacionManager;
 /**
  * Demonstrates the use of TinyEJB container with stateful session bean
  * 
- * @author Cl�udio Gualberto
+ * @author Cláudio Gualberto
  * 20/09/2014
  *
  */

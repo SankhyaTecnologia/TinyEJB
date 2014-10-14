@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class InvoiceFacadeBean implements SessionBean {
+	private static final long serialVersionUID = 1L;
 	private final static Logger LOGGER = LoggerFactory.getLogger(InvoiceFacadeBean.class);
 	private SessionContext ctx;
 	private double productsTotalPrice; //just to prove the thread-safeness of a stateless session bean (or not, if its a singleton)

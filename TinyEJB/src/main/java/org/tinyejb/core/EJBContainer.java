@@ -82,6 +82,8 @@ public class EJBContainer {
 		return status.get();
 	}
 
+
+	@SuppressWarnings("unchecked")
 	public void deployModuleFromDescriptor(InputStream ejbDDInputStream) throws Exception {
 		if (ejbDDInputStream == null) {
 			throw new IllegalArgumentException("null InputStream for deployment descriptor.");
@@ -96,15 +98,15 @@ public class EJBContainer {
 		//parses ejb-jar.xml and deploys the beans found on it
 		if (XMLStuff.checkRequiredChildren(xml, "enterprise-beans")) {
 			Element enterpriseBeansElem = xml.getChild("enterprise-beans");
-			List sessionBeans = enterpriseBeansElem.getChildren("session");
+			List<Element> sessionBeans = enterpriseBeansElem.getChildren("session");
 
 			if (sessionBeans.isEmpty()) {
 				LOGGER.info("There is no session-bean on descriptor file");
 			} else {
 				Map<String, List<EJBMethodTransactionInfo>> listOfMethods = processAssemblyDescriptor(xml);
 
-				for (Iterator ite = sessionBeans.iterator(); ite.hasNext();) {
-					Element sessionBean = (Element) ite.next();
+				for (Iterator<Element> ite = sessionBeans.iterator(); ite.hasNext();) {
+					Element sessionBean =  ite.next();
 
 					EJBMetadata ejbmd = processBean(sessionBean);
 
@@ -169,7 +171,7 @@ public class EJBContainer {
 				}
 
 				if (jndiName == null) {
-					Class homeIntfClass = getClass(ejbmd.getHomeIntf());
+					Class<?> homeIntfClass = getClass(ejbmd.getHomeIntf());
 					jndiName = "java:comp/env/ejb/" + homeIntfClass.getSimpleName();
 				}
 
@@ -189,7 +191,7 @@ public class EJBContainer {
 				}
 
 				if (jndiName == null) {
-					Class localHomeIntfClass = getClass(ejbmd.getLocalHomeIntf());
+					Class<?> localHomeIntfClass = getClass(ejbmd.getLocalHomeIntf());
 					jndiName = "java:comp/env/ejb/" + localHomeIntfClass.getSimpleName();
 				}
 
@@ -258,22 +260,22 @@ public class EJBContainer {
 		return null;
 	}
 
-	private Class getClass(String name) throws Exception {
+	private Class<?> getClass(String name) throws Exception {
 		return Class.forName(name, true, Thread.currentThread().getContextClassLoader());
 	}
 
 	private void checkEJBSpecViolations(EJBMetadata ejbm) throws Exception {
 		//checks some EJB spec violations.
 
-		Class ejbClass = getClass(ejbm.getEjbClassName());
+		Class<?> ejbClass = getClass(ejbm.getEjbClassName());
 
 		if (!SessionBean.class.isAssignableFrom(ejbClass)) {
 			throw new IllegalStateException("EJB spec violation (cap: 7.5.1): Session Bean class must implements javax.ejb.SessionBean interface (directly ou indirectly).");
 		}
 
 		if (ejbm.getLocalHomeIntf() != null) {
-			Class localHomeIntfClass = getClass(ejbm.getLocalHomeIntf());
-			Class localIntfClass = getClass(ejbm.getLocalIntf());
+			Class<?> localHomeIntfClass = getClass(ejbm.getLocalHomeIntf());
+			Class<?> localIntfClass = getClass(ejbm.getLocalIntf());
 
 			if (!EJBLocalObject.class.isAssignableFrom(localIntfClass)) {
 				throw new IllegalStateException("EJB spec violation (cap: 7.11.7): Session Bean's Local Interface must extend the javax.ejb.EJBLocalObject interface.");
@@ -308,8 +310,8 @@ public class EJBContainer {
 		}
 
 		if (ejbm.getHomeIntf() != null) {
-			Class homeIntfClass = getClass(ejbm.getHomeIntf());
-			Class remoteIntfClass = getClass(ejbm.getRemoteIntf());
+			Class<?> homeIntfClass = getClass(ejbm.getHomeIntf());
+			Class<?> remoteIntfClass = getClass(ejbm.getRemoteIntf());
 
 			if (!EJBObject.class.isAssignableFrom(remoteIntfClass)) {
 				throw new IllegalStateException("EJB spec violation (cap: 7.11.7): Session Bean's Remote Interface must extend the javax.ejb.EJBObject interface.");
@@ -344,23 +346,24 @@ public class EJBContainer {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private Map<String, List<EJBMethodTransactionInfo>> processAssemblyDescriptor(Element xml) throws Exception {
 		Map<String, List<EJBMethodTransactionInfo>> result = new HashMap<String, List<EJBMethodTransactionInfo>>();
 
 		Element assemblyDescriptorElem = xml.getChild("assembly-descriptor");
 
 		if (assemblyDescriptorElem != null) {
-			List containerTransactionElems = assemblyDescriptorElem.getChildren("container-transaction");
+			List<Element> containerTransactionElems = assemblyDescriptorElem.getChildren("container-transaction");
 
-			for (Iterator ite = containerTransactionElems.iterator(); ite.hasNext();) {
-				Element containerTransactionElem = (Element) ite.next();
+			for (Iterator<Element> ite = containerTransactionElems.iterator(); ite.hasNext();) {
+				Element containerTransactionElem = ite.next();
 
 				if (XMLStuff.checkRequiredChildren(containerTransactionElem, "method", "trans-attribute")) {
-					List methodElems = containerTransactionElem.getChildren("method");
+					List<Element> methodElems = containerTransactionElem.getChildren("method");
 					TRANSACTION_TYPE txType = TRANSACTION_TYPE.valueOf(XMLStuff.getChildElementText(containerTransactionElem, "trans-attribute"));
 
-					for (Iterator ite2 = methodElems.iterator(); ite2.hasNext();) {
-						Element methodElem = (Element) ite2.next();
+					for (Iterator<Element> ite2 = methodElems.iterator(); ite2.hasNext();) {
+						Element methodElem = ite2.next();
 
 						if (XMLStuff.checkRequiredChildren(methodElem, "ejb-name", "method-name")) {
 							String ejbName = XMLStuff.getChildElementText(methodElem, "ejb-name");
@@ -389,6 +392,7 @@ public class EJBContainer {
 		return result;
 	}
 
+	@SuppressWarnings("unchecked")
 	private String buildMethodSignature(Element methodEle, String methodName, METHOD_INTF methodIntf) throws Exception {
 		StringBuilder b = new StringBuilder();
 
@@ -399,8 +403,8 @@ public class EJBContainer {
 		int pCount = 0;
 
 		if (params != null) {
-			for (Iterator ite = params.getChildren("method-param").iterator(); ite.hasNext();) {
-				Element paramElem = (Element) ite.next();
+			for (Iterator<Element> ite = params.getChildren("method-param").iterator(); ite.hasNext();) {
+				Element paramElem =  ite.next();
 				if (pCount > 0) {
 					b.append(",");
 				}

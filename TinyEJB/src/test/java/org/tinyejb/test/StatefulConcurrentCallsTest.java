@@ -52,7 +52,7 @@ public class StatefulConcurrentCallsTest {
 				while (true) {
 					try {
 						bean.addItem(new CartItem("Book", 1, "Capital, by Thomas Piketty", 50));
-						Thread.currentThread().sleep(10);
+						Thread.sleep(10);
 					} catch (Exception e) {
 						throw new IllegalStateException(e);
 					}
@@ -68,7 +68,7 @@ public class StatefulConcurrentCallsTest {
 					try {
 						int removeCount = bean.removeItem("Capital, by Thomas Piketty");
 						LOGGER.debug(removeCount + " items removed");
-						Thread.currentThread().sleep(10);
+						Thread.sleep(10);
 					} catch (Exception e) {
 						throw new IllegalStateException(e);
 					}

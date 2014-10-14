@@ -6,9 +6,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
 
 import javax.ejb.CreateException;
 import javax.ejb.EJBHome;
@@ -17,7 +14,6 @@ import javax.ejb.EJBMetaData;
 import javax.ejb.Handle;
 import javax.ejb.HomeHandle;
 import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
 
 import org.tinyejb.core.EJBContainer;
 import org.tinyejb.core.EJBMetadata;
@@ -37,7 +33,7 @@ public class EJBHomeBuilder {
 	public static IEJBHome build(EJBMetadata ejbMetadata, EJBContainer ejbContainer, METHOD_INTF methodIntf) throws Exception {
 		EJBHomeProxy proxyHnd = new EJBHomeProxy(ejbMetadata, ejbContainer, methodIntf);
 
-		Class homeIntf;
+		Class<?> homeIntf;
 
 		if (methodIntf.equals(METHOD_INTF.LocalHome)) {
 			homeIntf = Class.forName(ejbMetadata.getLocalHomeIntf(), true, Thread.currentThread().getContextClassLoader());
@@ -59,6 +55,8 @@ public class EJBHomeBuilder {
 	 *
 	 */
 	private static class EJBHomeProxy implements InvocationHandler, IEJBHome, Serializable {
+		private static final long serialVersionUID = 1L;
+
 		private EJBMetadata ejbMetadata;
 
 		//proxy that is used for all client calls of this bean. Only for stateless beans.
@@ -82,7 +80,7 @@ public class EJBHomeBuilder {
 		@Override
 		public Object invoke(Object homeProxy, Method method, Object[] args) throws Throwable {
 
-			Class methodDeclaringClass = method.getDeclaringClass();
+			Class<?> methodDeclaringClass = method.getDeclaringClass();
 
 			if (IEJBHome.class.equals(methodDeclaringClass)) {
 				return method.invoke(this, args);
@@ -237,6 +235,8 @@ public class EJBHomeBuilder {
 				}
 			} else if (name.equals("getHomeHandle")) {
 				return new HomeHandle() {
+					private static final long serialVersionUID = 1L;
+
 					@Override
 					public EJBHome getEJBHome() throws RemoteException {
 						//this handle don't aims to be Serializable, just satisfy the spec
@@ -264,7 +264,7 @@ public class EJBHomeBuilder {
 				}
 
 				@Override
-				public Class getRemoteInterfaceClass() {
+				public Class<?> getRemoteInterfaceClass() {
 					try {
 						return ejbMetadata.getRemoteIntf() != null ? Class.forName(ejbMetadata.getRemoteIntf(), true, Thread.currentThread().getContextClassLoader()) : null;
 					} catch (ClassNotFoundException e) {
@@ -273,12 +273,12 @@ public class EJBHomeBuilder {
 				}
 
 				@Override
-				public Class getPrimaryKeyClass() {
+				public Class<?> getPrimaryKeyClass() {
 					throw new IllegalStateException("Method not supported: getPrimaryKeyClass");
 				}
 
 				@Override
-				public Class getHomeInterfaceClass() {
+				public Class<?> getHomeInterfaceClass() {
 					try {
 						return ejbMetadata.getHomeIntf() != null ? Class.forName(ejbMetadata.getHomeIntf(), true, Thread.currentThread().getContextClassLoader()) : null;
 					} catch (ClassNotFoundException e) {

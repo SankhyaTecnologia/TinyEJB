@@ -16,7 +16,7 @@ import org.tinyejb.core.EJBMetadata;
 /**
  * Stateless SessionBean instance pool
  * 
- * @author Cl�udio Gualberto
+ * @author Cláudio Gualberto
  * 19/09/2014
  *
  */

@@ -16,7 +16,7 @@ import org.tinyejb.utils.XMLStuff;
  * 
  * Other elements defined on jboss_x.dtd are simply ignored. 
  * 
- * @author Cl�udio Gualberto
+ * @author Cláudio Gualberto
  * 
  * 19/09/2014
  *
@@ -26,6 +26,7 @@ public class JBossJndiResolver implements IJndiResolver {
 
 	private Map<String, BeanEntry> entries = new HashMap<String, JBossJndiResolver.BeanEntry>();
 
+	@SuppressWarnings("unchecked")
 	public static IJndiResolver buildFromJBossDescriptor(InputStream descriptorInput) throws Exception {
 		if (descriptorInput == null) {
 			throw new IllegalArgumentException("stream para o descritor JBoss deve ser informado.");
@@ -39,8 +40,8 @@ public class JBossJndiResolver implements IJndiResolver {
 			Element enterpriseBeansElem = xml.getChild("enterprise-beans");
 
 			if (XMLStuff.checkRequiredChildren(enterpriseBeansElem, "session")) {
-				for (Iterator ite = enterpriseBeansElem.getChildren("session").iterator(); ite.hasNext();) {
-					Element sessionElem = (Element) ite.next();
+				for (Iterator<Element> ite = enterpriseBeansElem.getChildren("session").iterator(); ite.hasNext();) {
+					Element sessionElem = ite.next();
 					if (XMLStuff.checkRequiredChildren(sessionElem, "ejb-name")) {
 						String name = XMLStuff.getChildElementText(sessionElem, "ejb-name");
 						if (!result.entries.containsKey(name)) {

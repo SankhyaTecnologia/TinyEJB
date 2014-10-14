@@ -39,8 +39,8 @@ public class SessionBeanProxyBuilder {
 		return (ISessionEJB) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), buildInterfacesToImplement(ejbMetadata, methodIntf), proxyIH);
 	}
 
-	private static Class[] buildInterfacesToImplement(EJBMetadata ejbmd, METHOD_INTF methodIntf) throws Exception {
-		List<Class> interfaces = new ArrayList<Class>();
+	private static Class<?>[] buildInterfacesToImplement(EJBMetadata ejbmd, METHOD_INTF methodIntf) throws Exception {
+		List<Class<?>> interfaces = new ArrayList<Class<?>>();
 
 		if (methodIntf.equals(METHOD_INTF.Local)) {
 			interfaces.add(Class.forName(ejbmd.getLocalIntf(), true, Thread.currentThread().getContextClassLoader()));
@@ -119,6 +119,8 @@ public class SessionBeanProxyBuilder {
 				return homeProxy;
 			} else if (method.getName().equals("getHandle")) {
 				return new Handle() {
+					private static final long serialVersionUID = 1L;
+
 					@Override
 					public EJBObject getEJBObject() throws RemoteException {
 						return (EJBObject) beanProxy;
@@ -158,17 +160,17 @@ public class SessionBeanProxyBuilder {
 				if (ejbMetadata.isStateless()) {
 					/*
 					 EJB spec 6.9.2
-					 todos os EJBs stateless criados pela mesma home sempre ser�o id�nticos, independente de inst�ncia do SessionBean
-					*/
+					 todos os EJBs stateless criados pela mesma home sempre serão idênticos, independente de instância do SessionBean
+					 */
 					return homeProxy == (ejbMetadata.isLocalObjectInterface(m) ? ((EJBLocalObject) args[0]).getEJBLocalHome() : ((EJBObject) args[0]).getEJBHome());
 				}
 
-				/*
-				 EJB spec 6.9.1
-				 Stateful session beans devem possuir uma identidade �nica.
-				 Considerando que cada EJB deste tipo possui uma inst�ncia de proxy para cada inst�ncia de SessionBean, ent�o
-				 um bean ser� considerado id�ntico ao outro caso ambos possuam o mesmo proxy.
-				 */
+					/*
+				  	EJB spec 6.9.1
+					Stateful session beans devem possuir uma identidade única.
+					Considerando que cada EJB deste tipo possui uma instância de proxy para cada instância de SessionBean, então
+					um bean será considerado idêntico ao outro caso ambos possuam o mesmo proxy.
+					 */
 				return beanProxy == args[0];
 			} catch (Exception e) {
 				throw new IllegalStateException(e);
@@ -180,8 +182,8 @@ public class SessionBeanProxyBuilder {
 				LOGGER.info("ignoring remove() call on stateless bean");
 			} else {//Stateful
 				try {
-					//Segundo a especifica��o EJB 2.x a chamada a ejbRemove() � feita em um contexto n�o transacional.
-					beanDelegate.getClass().getMethod("ejbRemove", null).invoke(beanDelegate, null);
+					//Segundo a especificação EJB 2.x a chamada a ejbRemove() é feita em um contexto não transacional.
+					beanDelegate.getClass().getMethod("ejbRemove").invoke(beanDelegate);
 				} catch (NoSuchMethodException e) {
 					throw new IllegalStateException("No ejbRemove() method found on '" + ejbMetadata.getName() + ".");
 				}
@@ -356,14 +358,14 @@ public class SessionBeanProxyBuilder {
 				tx.commit();
 			}
 
-			txManager.suspend(); //desvinculamos a TX da Thread atual, pois ela j� n�o tem utilidade
+			txManager.suspend(); //desvinculamos a TX da Thread atual, pois ela já não tem utilidade
 		}
 	}
 
 	/**
 	 * Method call serializer for Stateful beans
 	 * 
-	 * @author Cl�udio Gualberto
+	 * @author Cláudio Gualberto
 	 * 20/09/2014
 	 *
 	 */

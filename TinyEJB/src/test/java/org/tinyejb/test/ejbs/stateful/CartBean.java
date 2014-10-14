@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class CartBean implements SessionBean, SessionSynchronization {
+	private static final long serialVersionUID = 1L;
 	private final static Logger LOGGER = LoggerFactory.getLogger(CartBean.class);
 	private SessionContext ctx;
 	private List<CartItem> cartItems;

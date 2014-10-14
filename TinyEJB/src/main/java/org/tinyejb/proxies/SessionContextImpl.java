@@ -12,7 +12,6 @@ import javax.ejb.SessionContext;
 import javax.ejb.TimerService;
 import javax.transaction.Status;
 import javax.transaction.Transaction;
-import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
 import javax.xml.rpc.handler.MessageContext;
 
@@ -20,6 +19,7 @@ import org.tinyejb.core.EJBContainer;
 import org.tinyejb.core.EJBMetadata;
 import org.tinyejb.core.EJBMetadata.TRANSACTION_MANAGED_BY;
 
+@SuppressWarnings("deprecation")
 public class SessionContextImpl implements SessionContext {
 	private Object homeProxy;
 	private Object beanProxy;

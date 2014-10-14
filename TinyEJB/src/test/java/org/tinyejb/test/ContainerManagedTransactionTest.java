@@ -14,7 +14,7 @@ import org.tinyejb.test.mocks.MockTransacionManager;
 /**
  * Demonstrates the use of Container Managed Transactions with TinyEJB
  * 
- * @author Cl�udio Gualberto
+ * @author Cláudio Gualberto
  * 20/09/2014
  *
  */
