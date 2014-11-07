@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROCESS model-entity="JSFProcess">
+ <PROCESS-ITEM NAME="rules:#company#list.xhtml"
+  PATH="/company/list.xhtml" SHAPE="32,17,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#company#list.xhtml:0" NAME="item"
+   PATH="/company/list.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="edit::#company#edit.xhtml" NAME="output"
+    PATH="/company/edit.xhtml" TARGET="rules:#company#edit.xhtml"
+    TITLE="edit" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#company#edit.xhtml"
+  PATH="/company/edit.xhtml" SHAPE="240,33,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#company#edit.xhtml:0" NAME="item"
+   PATH="/company/edit.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="list::#company#list.xhtml" NAME="output"
+    PATH="/company/list.xhtml" TARGET="rules:#company#list.xhtml"
+    TITLE="list" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#book#list.xhtml" PATH="/book/list.xhtml"
+  SHAPE="32,129,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#book#list.xhtml:0" NAME="item"
+   PATH="/book/list.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="edit::#book#edit.xhtml" NAME="output"
+    PATH="/book/edit.xhtml" TARGET="rules:#book#edit.xhtml" TITLE="edit" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#book#edit.xhtml" PATH="/book/edit.xhtml"
+  SHAPE="240,145,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#book#edit.xhtml:0" NAME="item"
+   PATH="/book/edit.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="list::#book#list.xhtml" NAME="output"
+    PATH="/book/list.xhtml" TARGET="rules:#book#list.xhtml" TITLE="list" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#student#list.xhtml"
+  PATH="/student/list.xhtml" SHAPE="32,241,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#student#list.xhtml:0" NAME="item"
+   PATH="/student/list.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="edit::#student#edit.xhtml" NAME="output"
+    PATH="/student/edit.xhtml" TARGET="rules:#student#edit.xhtml"
+    TITLE="edit" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#student#edit.xhtml"
+  PATH="/student/edit.xhtml" SHAPE="240,257,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#student#edit.xhtml:0" NAME="item"
+   PATH="/student/edit.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="list::#student#list.xhtml" NAME="output"
+    PATH="/student/list.xhtml" TARGET="rules:#student#list.xhtml"
+    TITLE="list" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#turma#list.xhtml" PATH="/turma/list.xhtml"
+  SHAPE="256,369,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#turma#list.xhtml:0" NAME="item"
+   PATH="/turma/list.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="edit::#turma#edit.xhtml" NAME="output"
+    PATH="/turma/edit.xhtml" TARGET="rules:#turma#edit.xhtml"
+    TITLE="edit" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#turma#list.xhtml:1" NAME="item1"
+   PATH="/turma/list.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="fichaAula::#contrato#fichadeaulatoprint.xhtml" NAME="output"
+    PATH="/contrato/fichadeaulatoprint.xhtml"
+    TARGET="rules:#contrato#fichadeaulatoprint.xhtml" TITLE="fichaAula" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+  <PROCESS-ITEM ID="rules:#turma#list.xhtml:2" NAME="item2"
+   PATH="/turma/list.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="list::#register#list.xhtml" NAME="output"
+    PATH="/register/list.xhtml" TARGET="rules:#register#list.xhtml"
+    TITLE="list" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#turma#edit.xhtml" PATH="/turma/edit.xhtml"
+  SHAPE="32,353,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#turma#edit.xhtml:0" NAME="item"
+   PATH="/turma/edit.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="list::#turma#list.xhtml" NAME="output"
+    PATH="/turma/list.xhtml" TARGET="rules:#turma#list.xhtml"
+    TITLE="list" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#register#list.xhtml"
+  PATH="/register/list.xhtml" SHAPE="496,529,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#register#list.xhtml:0" NAME="item"
+   PATH="/register/list.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="edit::#register#edit.xhtml" NAME="output"
+    PATH="/register/edit.xhtml" TARGET="rules:#register#edit.xhtml"
+    TITLE="edit" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="list::#turma#list.xhtml" NAME="output1"
+    PATH="/turma/list.xhtml" TARGET="rules:#turma#list.xhtml"
+    TITLE="list" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#followup#list.xhtml"
+  PATH="/followup/list.xhtml" SHAPE="32,673,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#followup#list.xhtml:0" NAME="item"
+   PATH="/followup/list.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="edit::#followup#edit.xhtml" NAME="output"
+    PATH="/followup/edit.xhtml" TARGET="rules:#followup#edit.xhtml"
+    TITLE="edit" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#followup#edit.xhtml"
+  PATH="/followup/edit.xhtml" SHAPE="240,689,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#followup#edit.xhtml:0" NAME="item"
+   PATH="/followup/edit.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="list::#followup#list.xhtml" NAME="output"
+    PATH="/followup/list.xhtml" TARGET="rules:#followup#list.xhtml"
+    TITLE="list" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#studentpayment#list.xhtml"
+  PATH="/studentpayment/list.xhtml" SHAPE="32,785,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#studentpayment#list.xhtml:0" NAME="item"
+   PATH="/studentpayment/list.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="edit::#studentpayment#edit.xhtml"
+    NAME="output" PATH="/studentpayment/edit.xhtml"
+    TARGET="rules:#studentpayment#edit.xhtml" TITLE="edit" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#studentpayment#edit.xhtml"
+  PATH="/studentpayment/edit.xhtml" SHAPE="256,801,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#studentpayment#edit.xhtml:0" NAME="item"
+   PATH="/studentpayment/edit.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="list::#studentpayment#list.xhtml"
+    NAME="output" PATH="/studentpayment/list.xhtml"
+    TARGET="rules:#studentpayment#list.xhtml" TITLE="list" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#register#edit.xhtml"
+  PATH="/register/edit.xhtml" SHAPE="720,545,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#register#edit.xhtml:0" NAME="item"
+   PATH="/register/edit.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="list::#register#list.xhtml" NAME="output"
+    PATH="/register/list.xhtml" TARGET="rules:#register#list.xhtml"
+    TITLE="list" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:*" PATH="*" SHAPE="32,1009,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:*:0" NAME="item" PATH="*" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="companypayment::#companypayment#list.xhtml"
+    NAME="output" PATH="/companypayment/list.xhtml"
+    TARGET="rules:#companypayment#list.xhtml" TITLE="companypayment" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#companypayment#list.xhtml"
+  PATH="/companypayment/list.xhtml" SHAPE="240,1025,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#companypayment#list.xhtml:0" NAME="item"
+   PATH="/companypayment/list.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="monthly::#companypayment#listMonthly.xhtml"
+    NAME="output" PATH="/companypayment/listMonthly.xhtml"
+    TARGET="rules:#companypayment#listMonthly.xhtml" TITLE="monthly" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#companypayment#listMonthly.xhtml"
+  PATH="/companypayment/listMonthly.xhtml" SHAPE="464,1009,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#companypayment#listMonthly.xhtml:0"
+   NAME="item" PATH="/companypayment/listMonthly.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="detail::#companypayment#detail.xhtml"
+    NAME="output" PATH="/companypayment/detail.xhtml"
+    TARGET="rules:#companypayment#detail.xhtml" TITLE="detail" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#companypayment#detail.xhtml"
+  PATH="/companypayment/detail.xhtml" SHAPE="672,1025,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#companypayment#detail.xhtml:0" NAME="item"
+   PATH="/companypayment/detail.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="monthly::#companypayment#listMonthly.xhtml"
+    NAME="output" PATH="/companypayment/listMonthly.xhtml"
+    TARGET="rules:#companypayment#listMonthly.xhtml" TITLE="monthly" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:*:1" PATH="*" SHAPE="32,1121,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:*:1" NAME="item" PATH="*" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="relatorioMatriculas::#relatorios#matriculas.xhtml" NAME="output"
+    PATH="/relatorios/matriculas.xhtml"
+    TARGET="rules:#relatorios#matriculas.xhtml"
+    TITLE="relatorioMatriculas" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#contrato#buscaaluno.xhtml"
+  PATH="/contrato/buscaaluno.xhtml" SHAPE="32,1233,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#contrato#buscaaluno.xhtml:0" NAME="item"
+   PATH="/contrato/buscaaluno.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="contrato::#contrato#contrato.xhtml"
+    NAME="output" PATH="/contrato/contrato.xhtml"
+    TARGET="rules:#contrato#contrato.xhtml" TITLE="contrato" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="fichaPresenca::#contrato#fichapresenca.xhtml" NAME="output1"
+    PATH="/contrato/fichapresenca.xhtml"
+    TARGET="rules:#contrato#fichapresenca.xhtml" TITLE="fichaPresenca" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#relatorios#studentpaymentreport.xhtml"
+  PATH="/relatorios/studentpaymentreport.xhtml" SHAPE="32,897,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#relatorios#studentpaymentreport.xhtml:0"
+   NAME="item" PATH="/relatorios/studentpaymentreport.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="edit::#studentpayment#edit.xhtml"
+    NAME="output" PATH="/studentpayment/edit.xhtml"
+    TARGET="rules:#studentpayment#edit.xhtml" TITLE="edit" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#contrato#fichadeaulatoprint.xhtml"
+  PATH="/contrato/fichadeaulatoprint.xhtml" SHAPE="496,353,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#relatorios#matriculas.xhtml"
+  PATH="/relatorios/matriculas.xhtml" SHAPE="240,1137,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#contrato#contrato.xhtml"
+  PATH="/contrato/contrato.xhtml" SHAPE="256,1249,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#contrato#fichapresenca.xhtml"
+  PATH="/contrato/fichapresenca.xhtml" SHAPE="256,1393,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#courselanguage#list.xhtml"
+  PATH="/courselanguage/list.xhtml" SHAPE="240,1617,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#courselanguage#list.xhtml:0" NAME="item"
+   PATH="/courselanguage/list.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="edit::#courselanguage#edit.xhtml"
+    NAME="output" PATH="/courselanguage/edit.xhtml"
+    TARGET="rules:#courselanguage#edit.xhtml" TITLE="edit" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#courselanguage#edit.xhtml"
+  PATH="/courselanguage/edit.xhtml" SHAPE="32,1601,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#courselanguage#edit.xhtml:0" NAME="item"
+   PATH="/courselanguage/edit.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="list::#courselanguage#list.xhtml"
+    NAME="output" PATH="/courselanguage/list.xhtml"
+    TARGET="rules:#courselanguage#list.xhtml" TITLE="list" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+</PROCESS>

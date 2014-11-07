@@ -22,6 +22,8 @@ import org.tinyejb.utils.XMLStuff;
  *
  */
 public class JBossJndiResolver implements IJndiResolver {
+	private static final long	serialVersionUID	= 1L;
+
 	private final static Logger LOGGER = LoggerFactory.getLogger(JBossJndiResolver.class);
 
 	private Map<String, BeanEntry> entries = new HashMap<String, JBossJndiResolver.BeanEntry>();

@@ -15,32 +15,27 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.tinyejb.core.EJBContainer;
 import org.tinyejb.core.IJndiResolver;
 import org.tinyejb.core.JBossJndiResolver;
+import org.tinyejb.core.ResourceHolder;
 import org.tinyejb.test.ejbs.stateless.InvoiceFacade;
 import org.tinyejb.test.ejbs.stateless.InvoiceFacadeHome;
 import org.tinyejb.test.mocks.MockNamingContext;
 import org.tinyejb.test.mocks.MockTransacionManager;
 
 @RunWith(Parameterized.class)
-
 public class EJBStatelessTest {
-	private final static Logger LOGGER = LoggerFactory
-			.getLogger(InvoiceTest.class);
-	private final static Random random = new Random();
-	private static EJBContainer ejbContainer;
-	private static Context jndiContext;
-	private static InvoiceFacade bean;
+	private final static Random		random	= new Random();
+	private static EJBContainer		ejbContainer;
+	private static Context			jndiContext;
+	private static InvoiceFacade	bean;
 
-	private double totalProductsPrice;
-	private double importFees;
-	private double expected;
+	private double					totalProductsPrice;
+	private double					importFees;
+	private double					expected;
 
-	public EJBStatelessTest(double totalProductsPrice, double importFees,
-			double expected) {
+	public EJBStatelessTest(double totalProductsPrice, double importFees, double expected) {
 		this.totalProductsPrice = totalProductsPrice;
 		this.importFees = importFees;
 		this.expected = expected;
@@ -52,10 +47,8 @@ public class EJBStatelessTest {
 		for (int i = 0; i < 50; i++) {
 			double totalProductsPrice = random.nextInt(30000);
 			double importFees = random.nextInt(1000);
-			double resultShouldBe = totalProductsPrice
-					+ (totalProductsPrice * importFees / 100);
-			tests.add(new Double[] { totalProductsPrice, importFees,
-					resultShouldBe });
+			double resultShouldBe = totalProductsPrice + (totalProductsPrice * importFees / 100);
+			tests.add(new Double[] { totalProductsPrice, importFees, resultShouldBe });
 		}
 
 		return tests;
@@ -65,9 +58,7 @@ public class EJBStatelessTest {
 	public void test_insertInvoice() throws EJBException, Exception {
 		// assertEquals(expected, totalProductsPrice + (totalProductsPrice *
 		// importFees / 100),0);
-		assertEquals(expected,
-				bean.insertInvoice(totalProductsPrice, importFees),
-				Double.MIN_VALUE);
+		assertEquals(expected, bean.insertInvoice(totalProductsPrice, importFees), Double.MIN_VALUE);
 	}
 
 	@BeforeClass
@@ -75,8 +66,8 @@ public class EJBStatelessTest {
 		jndiContext = new MockNamingContext(); // very simple naming context
 												// (test purpose only)
 
-		ejbContainer = new EJBContainer(new MockTransacionManager(),
-				jndiContext);
+		ResourceHolder.setHolder(new MockTransacionManager(), jndiContext);
+		ejbContainer = new EJBContainer();
 
 		/*
 		 * using JBoss deployment descriptor to define jndi names. if we don't
@@ -89,9 +80,7 @@ public class EJBStatelessTest {
 		 * In this example, the file is named tinyjboss.xml, but naturally it
 		 * can be named as you can, but it must be compliant with jboss_4_0.dtd
 		 */
-		IJndiResolver jndi = JBossJndiResolver
-				.buildFromJBossDescriptor(CartTest.class
-						.getResourceAsStream("/tinyejb-jboss.xml"));
+		IJndiResolver jndi = JBossJndiResolver.buildFromJBossDescriptor(CartTest.class.getResourceAsStream("/tinyejb-jboss.xml"));
 
 		ejbContainer.setJndiResolver(jndi);
 
@@ -101,17 +90,13 @@ public class EJBStatelessTest {
 		 * TinyEJB container, but it must be, at least, compliant with EJB 2.0
 		 * XML DTD or EJB 2.1 schema
 		 */
-		ejbContainer.deployModuleFromDescriptor(CartTest.class
-				.getResourceAsStream("/tinyejb-ejb-jar.xml"));
+		ejbContainer.deployModuleFromDescriptor(CartTest.class.getResourceAsStream("/tinyejb-ejb-jar.xml"));
 
-		
-		
-//		ejbContainer.setUseSingletonForStateless(true);
-		
-		InvoiceFacadeHome home = (InvoiceFacadeHome) jndiContext
-				.lookup(InvoiceFacadeHome.COMP_NAME);// note thar we are using
-														// the default name (as
-														// EJB spec)
+		//		ejbContainer.setUseSingletonForStateless(true);
+
+		InvoiceFacadeHome home = (InvoiceFacadeHome) jndiContext.lookup(InvoiceFacadeHome.COMP_NAME);// note thar we are using
+																										// the default name (as
+																										// EJB spec)
 
 		bean = home.create();
 

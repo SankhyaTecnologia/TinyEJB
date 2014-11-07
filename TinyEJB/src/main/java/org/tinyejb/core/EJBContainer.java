@@ -1,6 +1,7 @@
 package org.tinyejb.core;
 
 import java.io.InputStream;
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +13,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBObject;
 import javax.ejb.SessionBean;
-import javax.naming.Context;
 import javax.transaction.TransactionManager;
 
 import org.jdom.Element;
@@ -27,12 +27,12 @@ import org.tinyejb.proxies.EJBHomeBuilder;
 import org.tinyejb.proxies.IEJBHome;
 import org.tinyejb.utils.XMLStuff;
 
-public class EJBContainer {
+public class EJBContainer implements Serializable{
+	private static final String	JAVA_COMP_ENV_EJB	= "java:/comp/env/ejb/";
+	private static final long	serialVersionUID	= 1L;
 	private final static Logger LOGGER = LoggerFactory.getLogger(EJBContainer.class);
 	private Map<String, EJBMetadata> deployedBeans;
 	private IJndiResolver jndiResolver;
-	private TransactionManager txManager;
-	private Context jndiContext;
 	
 
 	/*
@@ -67,15 +67,13 @@ public class EJBContainer {
 
 	private AtomicReference<ContainerStatus> status;
 
-	public EJBContainer(TransactionManager txManager, Context jndiContext) {
+	public EJBContainer() {
 		this.deployedBeans = new HashMap<String, EJBMetadata>();
-		this.txManager = txManager;
-		this.jndiContext = jndiContext;
 		this.status = new AtomicReference<EJBContainer.ContainerStatus>(ContainerStatus.NORMAL);
 	}
 
 	public TransactionManager getTransactionManager() {
-		return txManager;
+		return ResourceHolder.getTxManager();
 	}
 
 	public ContainerStatus getContainerStatus() {
@@ -145,9 +143,9 @@ public class EJBContainer {
 
 			for (String jndiName : ejbmd.getJndiNames()) {
 				try {
-					IEJBHome home = (IEJBHome) jndiContext.lookup(jndiName);
+					IEJBHome home = (IEJBHome) ResourceHolder.getJndiContext().lookup(jndiName);
 					home.onContainerShutDown();
-					jndiContext.unbind(jndiName);
+					ResourceHolder.getJndiContext().unbind(jndiName);
 				} catch (Exception ignored) {
 				}
 			}
@@ -172,12 +170,12 @@ public class EJBContainer {
 
 				if (jndiName == null) {
 					Class<?> homeIntfClass = getClass(ejbmd.getHomeIntf());
-					jndiName = "java:comp/env/ejb/" + homeIntfClass.getSimpleName();
+					jndiName = JAVA_COMP_ENV_EJB + homeIntfClass.getSimpleName();
 				}
 
 				IEJBHome home = EJBHomeBuilder.build(ejbmd, this, METHOD_INTF.Home);
 				LOGGER.info(ejbmd.getName() + ": remote factory bound to JNDI entry '" + jndiName + "'");
-				jndiContext.bind(jndiName, home);
+				ResourceHolder.getJndiContext().bind(jndiName, home);
 				ejbmd.addJndiName(jndiName);
 				bindCount++;
 			}
@@ -192,12 +190,12 @@ public class EJBContainer {
 
 				if (jndiName == null) {
 					Class<?> localHomeIntfClass = getClass(ejbmd.getLocalHomeIntf());
-					jndiName = "java:comp/env/ejb/" + localHomeIntfClass.getSimpleName();
+					jndiName = JAVA_COMP_ENV_EJB + localHomeIntfClass.getSimpleName();
 				}
 
 				IEJBHome home = EJBHomeBuilder.build(ejbmd, this, METHOD_INTF.LocalHome);
 				LOGGER.info(ejbmd.getName() + ": local factory bound to JNDI entry '" + jndiName + "'");
-				jndiContext.bind(jndiName, home);
+				ResourceHolder.getJndiContext().bind(jndiName, home);
 				ejbmd.addJndiName(jndiName);
 				bindCount++;
 			}

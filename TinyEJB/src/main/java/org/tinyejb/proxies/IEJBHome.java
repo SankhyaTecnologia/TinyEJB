@@ -1,5 +1,7 @@
 package org.tinyejb.proxies;
 
-public interface IEJBHome {
+import java.io.Serializable;
+
+public interface IEJBHome extends Serializable{
 	void onContainerShutDown();
 }

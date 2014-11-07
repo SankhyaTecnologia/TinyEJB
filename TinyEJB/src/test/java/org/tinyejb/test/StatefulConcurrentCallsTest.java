@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.tinyejb.core.EJBContainer;
 import org.tinyejb.core.IJndiResolver;
 import org.tinyejb.core.JBossJndiResolver;
+import org.tinyejb.core.ResourceHolder;
 import org.tinyejb.test.ejbs.stateful.Cart;
 import org.tinyejb.test.ejbs.stateful.CartHome;
 import org.tinyejb.test.ejbs.stateful.CartItem;
@@ -14,9 +15,9 @@ import org.tinyejb.test.mocks.MockNamingContext;
 import org.tinyejb.test.mocks.MockTransacionManager;
 
 public class StatefulConcurrentCallsTest {
-	private final static Logger LOGGER = LoggerFactory.getLogger(StatefulConcurrentCallsTest.class);
-	private EJBContainer ejbContainer;
-	private Context jndiContext;
+	private final static Logger	LOGGER	= LoggerFactory.getLogger(StatefulConcurrentCallsTest.class);
+	private EJBContainer		ejbContainer;
+	private Context				jndiContext;
 
 	/**
 	 * @param args
@@ -77,7 +78,7 @@ public class StatefulConcurrentCallsTest {
 		});
 
 		Thread.sleep(20000); //just to see the results
-		
+
 		ejbContainer.undeploy();
 	}
 
@@ -90,7 +91,8 @@ public class StatefulConcurrentCallsTest {
 	private void initContainer() throws Exception {
 		jndiContext = new MockNamingContext(); //very simple naming context (test purpose only)
 
-		ejbContainer = new EJBContainer(new MockTransacionManager(), jndiContext);
+		ResourceHolder.setHolder(new MockTransacionManager(), jndiContext);
+		ejbContainer = new EJBContainer();
 
 		/*
 		 using JBoss deployment descriptor to define jndi names. 

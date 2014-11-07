@@ -1,12 +1,14 @@
 package org.tinyejb.core;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EJBMetadata {
+public class EJBMetadata implements Serializable{
+	private static final long serialVersionUID = 1L;
 	private String name;
 	private BEAN_TYPE type;
 	private TRANSACTION_MANAGED_BY txManagedBy;
@@ -57,7 +59,7 @@ public class EJBMetadata {
 		b.append(m.getName()).append("(");
 		
 		int i = 0;
-		for(Class pType : m.getParameterTypes()){
+		for(Class<?> pType : m.getParameterTypes()){
 			if(i > 0){
 				b.append(",");
 			}
@@ -102,7 +104,8 @@ public class EJBMetadata {
 		return b.toString();
 	}
 
-	public static class EJBMethodTransactionInfo {
+	public static class EJBMethodTransactionInfo implements Serializable{
+		private static final long serialVersionUID = 1L;
 		private String name;
 		private String signature;
 		private TRANSACTION_TYPE txType;

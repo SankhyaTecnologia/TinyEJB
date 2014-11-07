@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.tinyejb.core.EJBContainer;
 import org.tinyejb.core.IJndiResolver;
 import org.tinyejb.core.JBossJndiResolver;
+import org.tinyejb.core.ResourceHolder;
 import org.tinyejb.test.ejbs.stateful.CartItem;
 import org.tinyejb.test.ejbs.stateful.CartLocal;
 import org.tinyejb.test.ejbs.stateful.CartLocalHome;
@@ -70,7 +71,8 @@ public class CartTest {
 	private void initContainer() throws Exception {
 		jndiContext = new MockNamingContext(); //very simple naming context (test purpose only)
 
-		ejbContainer = new EJBContainer(new MockTransacionManager(), jndiContext);
+		ResourceHolder.setHolder(new MockTransacionManager(), jndiContext);
+		ejbContainer = new EJBContainer();
 
 		/*
 		 using JBoss deployment descriptor to define jndi names. 

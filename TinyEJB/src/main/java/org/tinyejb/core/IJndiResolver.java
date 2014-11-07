@@ -1,5 +1,7 @@
 package org.tinyejb.core;
 
+import java.io.Serializable;
+
 /**
  * Interface for JNDI names resolvers.
  * By defauly, TinyEJB deploys home interfaces on 'java:comp/env/ejb/' JNDI path, as defined by EJB spec 2.x
@@ -10,7 +12,7 @@ package org.tinyejb.core;
  * 19/09/2014
  *
  */
-public interface IJndiResolver {
+public interface IJndiResolver  extends Serializable{
 	String getRemoteJdniName(EJBMetadata ejb);
 
 	String getLocalJdniName(EJBMetadata ejb);

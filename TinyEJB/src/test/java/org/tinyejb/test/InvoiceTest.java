@@ -9,15 +9,16 @@ import org.slf4j.LoggerFactory;
 import org.tinyejb.core.EJBContainer;
 import org.tinyejb.core.IJndiResolver;
 import org.tinyejb.core.JBossJndiResolver;
+import org.tinyejb.core.ResourceHolder;
 import org.tinyejb.test.ejbs.stateless.InvoiceFacade;
 import org.tinyejb.test.ejbs.stateless.InvoiceFacadeHome;
 import org.tinyejb.test.mocks.MockNamingContext;
 import org.tinyejb.test.mocks.MockTransacionManager;
 
 public class InvoiceTest {
-	private final static Logger LOGGER = LoggerFactory.getLogger(InvoiceTest.class);
-	private EJBContainer ejbContainer;
-	private Context jndiContext;
+	private final static Logger	LOGGER	= LoggerFactory.getLogger(InvoiceTest.class);
+	private EJBContainer		ejbContainer;
+	private Context				jndiContext;
 
 	/**
 	 * @param args
@@ -39,7 +40,7 @@ public class InvoiceTest {
 
 		//uncomment the follwing line to use singleton stateless beans, so you will see concurrency errors
 		//ejbContainer.setUseSingletonForStateless(true);
-		
+
 		//this bean has remote interfaces only
 		InvoiceFacadeHome home = (InvoiceFacadeHome) jndiContext.lookup(InvoiceFacadeHome.COMP_NAME);//note thar we are using the default name (as EJB spec)
 
@@ -48,7 +49,7 @@ public class InvoiceTest {
 		LOGGER.debug("Total with fees: " + bean.insertInvoice(30000, 15));
 
 		LOGGER.debug("Inserting invoices concurrently...");
-		
+
 		/*
 		  if we are using default configuration (compliant with EJB spec thread-safe rules) we won't see any errors.
 		  but when singleton stateless is turned on, we can see errors, because the bean implementation is not taking care of synchronizing the acess to
@@ -60,13 +61,13 @@ public class InvoiceTest {
 		addTask(new ConcurrentTask(bean, 16000));
 
 		Thread.sleep(15000); //just to see the results
-		
+
 		ejbContainer.undeploy();
 	}
 
 	private static class ConcurrentTask implements Runnable {
-		private Random random = new Random();
-		private InvoiceFacade bean;
+		private Random			random	= new Random();
+		private InvoiceFacade	bean;
 
 		ConcurrentTask(InvoiceFacade bean, int maxRandomValue) {
 			this.bean = bean;
@@ -101,7 +102,8 @@ public class InvoiceTest {
 	private void initContainer() throws Exception {
 		jndiContext = new MockNamingContext(); //very simple naming context (test purpose only)
 
-		ejbContainer = new EJBContainer(new MockTransacionManager(), jndiContext);
+		ResourceHolder.setHolder(new MockTransacionManager(), jndiContext);
+		ejbContainer = new EJBContainer();
 
 		/*
 		 using JBoss deployment descriptor to define jndi names. 
