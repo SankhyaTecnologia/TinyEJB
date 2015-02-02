@@ -179,7 +179,7 @@ public class SessionBeanProxyBuilder {
 
 		private void callRemoveOnBean() throws Exception {
 			if (isStateless()) {
-				LOGGER.info("ignoring remove() call on stateless bean");
+				LOGGER.debug("ignoring remove() call on stateless bean");
 			} else {//Stateful
 				try {
 					//Segundo a especificação EJB 2.x a chamada a ejbRemove() é feita em um contexto não transacional.

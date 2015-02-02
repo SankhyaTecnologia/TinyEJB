@@ -43,7 +43,7 @@ public class EJBHomeBuilder {
 			throw new IllegalStateException("Unsupported home interface: " + methodIntf);
 		}
 
-		return (IEJBHome) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] { IEJBHome.class, homeIntf }, proxyHnd);
+		return (IEJBHome) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] { IEJBHome.class, homeIntf}, proxyHnd);
 	}
 
 	/**
@@ -194,7 +194,8 @@ public class EJBHomeBuilder {
 			 		c) call ejbCreate() method on the new instance, matching arguments from create() home interface
 			 */
 
-			SessionBean sb = (SessionBean) Class.forName(ejbMetadata.getEjbClassName(), true, Thread.currentThread().getContextClassLoader()).newInstance();
+			//SessionBean sb = (SessionBean) Class.forName(ejbMetadata.getEjbClassName(), true, Thread.currentThread().getContextClassLoader()).newInstance();
+			SessionBean sb = (SessionBean) Class.forName(ejbMetadata.getEjbClassName(), true, EJBContainer.class.getClassLoader()).newInstance();
 
 			sb.setSessionContext(new SessionContextImpl(homeProxy, beanProxy, ejbContainer, ejbMetadata));
 

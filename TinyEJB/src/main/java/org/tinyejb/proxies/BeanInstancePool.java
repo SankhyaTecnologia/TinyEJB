@@ -87,7 +87,7 @@ public class BeanInstancePool {
 				}
 			}
 			if (removedCount > 0) {
-				LOGGER.info(removedCount + " SessionBean instances removed from '" + ejbMetadata.getName() + "'s pool.");
+				LOGGER.debug(removedCount + " SessionBean instances removed from '" + ejbMetadata.getName() + "'s pool.");
 			}
 		}
 	}

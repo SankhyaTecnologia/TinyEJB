@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -27,45 +28,51 @@ import org.tinyejb.proxies.EJBHomeBuilder;
 import org.tinyejb.proxies.IEJBHome;
 import org.tinyejb.utils.XMLStuff;
 
-public class EJBContainer implements Serializable{
-	private static final String	JAVA_COMP_ENV_EJB	= "java:/comp/env/ejb/";
-	private static final long	serialVersionUID	= 1L;
-	private final static Logger LOGGER = LoggerFactory.getLogger(EJBContainer.class);
-	private Map<String, EJBMetadata> deployedBeans;
-	private IJndiResolver jndiResolver;
-	
+public class EJBContainer implements Serializable {
+	private static final String					JAVA_COMP_ENV_EJB			= "java:/comp/env/ejb/";
+	private static final long					serialVersionUID			= 1L;
+	private final static Logger					LOGGER						= LoggerFactory.getLogger(EJBContainer.class);
+	private Map<String, EJBMetadata>			deployedBeans;
+	private IJndiResolver						jndiResolver;
 
 	/*
-	 EJB 2.1 spec session 7.12.10 determines that a session bean instance must be thread-safe.
-	 TinyEJB has an instance pool for Stateless session beans, so each client call is serviced by a specific instance, and while the call 
-	 is going on, the instance remains unavailable for other clients.
-	 There is a background task that keeps this pool small as possible, an the following atribute configures the maximum time (in milleseconds) 
-	 an instance bean can stand idle, before the cleaner release it. Default value is 2 minutes  
+	 * EJB 2.1 spec session 7.12.10 determines that a session bean instance must
+	 * be thread-safe. TinyEJB has an instance pool for Stateless session beans,
+	 * so each client call is serviced by a specific instance, and while the
+	 * call is going on, the instance remains unavailable for other clients.
+	 * There is a background task that keeps this pool small as possible, an the
+	 * following atribute configures the maximum time (in milleseconds) an
+	 * instance bean can stand idle, before the cleaner release it. Default
+	 * value is 2 minutes
 	 */
-	private long pooledBeanMaxAge = 120000;
+	private long								pooledBeanMaxAge			= 120000;
 
 	/*
-	This is an out-of-spec alternative for Stateless session beans.
-	When the following attribute is true, TinyEJB will serve all client calls with only one session bean instance (ie. no instance poll is used)
-	This aproach performs better on applications that uses stateless beans as business delegation or just take advantage on container transactions.
-	Obviously, singleton stateless beans are thread-unsafe
+	 * This is an out-of-spec alternative for Stateless session beans. When the
+	 * following attribute is true, TinyEJB will serve all client calls with
+	 * only one session bean instance (ie. no instance poll is used) This
+	 * aproach performs better on applications that uses stateless beans as
+	 * business delegation or just take advantage on container transactions.
+	 * Obviously, singleton stateless beans are thread-unsafe
 	 */
-	private boolean useSingletonForStateless;
+	private boolean								useSingletonForStateless;
 
 	/*
-	EJB spec determines that concurrent calls on stateful are forbidden, and EJB container must throw an exception.
-	TinyEJB has a convenience way to avoid this situation, just waiting for the other call conclude, thus both calls executes on the right way
-	and on its own transaction.
-	The following attribute defines the timeout that incoming calls must wait before EJB container throws the exception. Default value is 30 seconds
+	 * EJB spec determines that concurrent calls on stateful are forbidden, and
+	 * EJB container must throw an exception. TinyEJB has a convenience way to
+	 * avoid this situation, just waiting for the other call conclude, thus both
+	 * calls executes on the right way and on its own transaction. The following
+	 * attribute defines the timeout that incoming calls must wait before EJB
+	 * container throws the exception. Default value is 30 seconds
 	 */
-	private long concurrentCallWaitTimeout = 30000;
+	private long								concurrentCallWaitTimeout	= 30000;
 
 	/*
-	Random to generate waitings on stateful calls (test only purposes)
+	 * Random to generate waitings on stateful calls (test only purposes)
 	 */
-	private int randomTimeToWaitOnStatefulCalls;
+	private int									randomTimeToWaitOnStatefulCalls;
 
-	private AtomicReference<ContainerStatus> status;
+	private AtomicReference<ContainerStatus>	status;
 
 	public EJBContainer() {
 		this.deployedBeans = new HashMap<String, EJBMetadata>();
@@ -80,59 +87,57 @@ public class EJBContainer implements Serializable{
 		return status.get();
 	}
 
-
 	@SuppressWarnings("unchecked")
-	public void deployModuleFromDescriptor(InputStream ejbDDInputStream) throws Exception {
-		if (ejbDDInputStream == null) {
+	public void deployModuleFromDescriptor(List<InputStream> ejbDDsInputStream) throws Exception {
+		if (ejbDDsInputStream.isEmpty()) {
 			throw new IllegalArgumentException("null InputStream for deployment descriptor.");
 		}
 
 		LOGGER.info("starting module deploy ...");
-
-		Element xml = XMLStuff.buildDomDocument(ejbDDInputStream).getRootElement();
-
 		int beanCount = 0;
+		for (InputStream ejbDDInputStream : ejbDDsInputStream) {
+			Element xml = XMLStuff.buildDomDocument(ejbDDInputStream).getRootElement();
+			ejbDDInputStream.close();
 
-		//parses ejb-jar.xml and deploys the beans found on it
-		if (XMLStuff.checkRequiredChildren(xml, "enterprise-beans")) {
-			Element enterpriseBeansElem = xml.getChild("enterprise-beans");
-			List<Element> sessionBeans = enterpriseBeansElem.getChildren("session");
+			// parses ejb-jar.xml and deploys the beans found on it
+			if (XMLStuff.checkRequiredChildren(xml, "enterprise-beans")) {
+				Element enterpriseBeansElem = xml.getChild("enterprise-beans");
+				List<Element> sessionBeans = enterpriseBeansElem.getChildren("session");
 
-			if (sessionBeans.isEmpty()) {
-				LOGGER.info("There is no session-bean on descriptor file");
-			} else {
-				Map<String, List<EJBMethodTransactionInfo>> listOfMethods = processAssemblyDescriptor(xml);
+				if (sessionBeans.isEmpty()) {
+					LOGGER.info("There is no session-bean on descriptor file");
+				} else {
+					Map<String, List<EJBMethodTransactionInfo>> listOfMethods = processAssemblyDescriptor(xml);
 
-				for (Iterator<Element> ite = sessionBeans.iterator(); ite.hasNext();) {
-					Element sessionBean =  ite.next();
+					for (Iterator<Element> ite = sessionBeans.iterator(); ite.hasNext();) {
+						Element sessionBean = ite.next();
 
-					EJBMetadata ejbmd = processBean(sessionBean);
+						EJBMetadata ejbmd = processBean(sessionBean);
 
-					if (ejbmd != null) {
-						List<EJBMethodTransactionInfo> lstTXInfo = listOfMethods.get(ejbmd.getName());
+						if (ejbmd != null) {
+							List<EJBMethodTransactionInfo> lstTXInfo = listOfMethods.get(ejbmd.getName());
 
-						if (lstTXInfo != null) {
-							ejbmd.addMethodTransactionInfo(lstTXInfo);
-						} else {
-							LOGGER.info("no transaction info for bean '" + ejbmd.getName() + "'. Assuming 'Required' as default for all business methods.");
-						}
+							if (lstTXInfo != null) {
+								ejbmd.addMethodTransactionInfo(lstTXInfo);
+							} else {
+								LOGGER.info("no transaction info for bean '" + ejbmd.getName() + "'. Assuming 'Required' as default for all business methods.");
+							}
 
-						if (deployIt(ejbmd)) {
-							beanCount++;
+							if (deployIt(ejbmd)) {
+								beanCount++;
+							}
 						}
 					}
 				}
 			}
 		}
-
 		LOGGER.info("Total of " + beanCount + " bean(s) deployed.");
-
 	}
 
 	public void undeploy() {
 		/*
-		 Undeploy process just unbinds home interfaces.
-		 Any thread using beans from this EJBContainer can have unexpected results.
+		 * Undeploy process just unbinds home interfaces. Any thread using beans
+		 * from this EJBContainer can have unexpected results.
 		 */
 		LOGGER.info("Undeploying " + deployedBeans.size() + " EJBs ...");
 
@@ -154,6 +159,21 @@ public class EJBContainer implements Serializable{
 		LOGGER.info("Undeploy done.");
 	}
 
+	private void createSubcontext(String jndiName) {
+		String[] sub = jndiName.split("/");
+		String path = "";
+		for (int i = 0; i < sub.length - 1; i++) {
+			try {
+				ResourceHolder.getJndiContext().createSubcontext(path + sub[i]);
+
+			} catch (Exception ex) {
+			} finally {
+				path += sub[i] + '/';
+			}
+		}
+
+	}
+
 	private boolean deployIt(EJBMetadata ejbmd) throws Exception {
 		try {
 
@@ -161,7 +181,7 @@ public class EJBContainer implements Serializable{
 			int bindCount = 0;
 
 			if (ejbmd.getHomeIntf() != null) {
-				//deploy remote home proxy
+				// deploy remote home proxy
 				String jndiName = null;
 
 				if (jndiResolver != null) {
@@ -174,14 +194,17 @@ public class EJBContainer implements Serializable{
 				}
 
 				IEJBHome home = EJBHomeBuilder.build(ejbmd, this, METHOD_INTF.Home);
+				
 				LOGGER.info(ejbmd.getName() + ": remote factory bound to JNDI entry '" + jndiName + "'");
+				createSubcontext(jndiName);
 				ResourceHolder.getJndiContext().bind(jndiName, home);
 				ejbmd.addJndiName(jndiName);
+				
 				bindCount++;
 			}
 
 			if (ejbmd.getLocalHomeIntf() != null) {
-				//deploy local home proxy
+				// deploy local home proxy
 				String jndiName = null;
 
 				if (jndiResolver != null) {
@@ -263,7 +286,7 @@ public class EJBContainer implements Serializable{
 	}
 
 	private void checkEJBSpecViolations(EJBMetadata ejbm) throws Exception {
-		//checks some EJB spec violations.
+		// checks some EJB spec violations.
 
 		Class<?> ejbClass = getClass(ejbm.getEjbClassName());
 
@@ -402,7 +425,7 @@ public class EJBContainer implements Serializable{
 
 		if (params != null) {
 			for (Iterator<Element> ite = params.getChildren("method-param").iterator(); ite.hasNext();) {
-				Element paramElem =  ite.next();
+				Element paramElem = ite.next();
 				if (pCount > 0) {
 					b.append(",");
 				}
@@ -458,5 +481,10 @@ public class EJBContainer implements Serializable{
 
 	public void setRandomTimeToWaitOnStatefulCalls(int randomTimeToWaitOnStatefulCalls) {
 		this.randomTimeToWaitOnStatefulCalls = randomTimeToWaitOnStatefulCalls;
+	}
+
+	public void deployModuleFromDescriptor(InputStream resourceAsStream) throws Exception {
+		deployModuleFromDescriptor(Collections.singletonList(resourceAsStream));
+		
 	}
 }

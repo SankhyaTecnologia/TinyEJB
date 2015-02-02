@@ -17,36 +17,41 @@ public class ResourceHolder {
 	private ResourceHolder() {
 	}
 
-	private void init() {
-		try {
-			this.jndiContext = new InitialContext();
-			this.txManager = lookupForTransactionManager();
-			jndiContext.createSubcontext("java:/comp/env/ejb");
-		} catch (NamingException e) {
-			LOGGER.error("trying get resource", e);
+	private synchronized static void init() {
+		if (holder == null) {
+			holder = new ResourceHolder();
+			try {
+				holder.jndiContext = new InitialContext();
+				holder.lookupForTransactionManager();
+				holder.jndiContext.createSubcontext("java:/comp/env/ejb");
+			} catch (NamingException e) {
+				LOGGER.error("trying get resource", e);
+			}
 		}
 	}
 
-	private TransactionManager lookupForTransactionManager() throws NamingException {
-		String[] jndi = { "java:jboss/TransactionManager", "java:/TransactionManager" };
+	private void lookupForTransactionManager() throws NamingException {
+		String[] jndi = { "java:jboss/TransactionManager", "java:/TransactionManager", "java:comp/pm/TransactionManager", "java:comp/TransactionManager" };
 		for (String jndiAddress : jndi) {
 			Object tx;
 			try {
 				tx = jndiContext.lookup(jndiAddress);
 				if (tx != null && tx instanceof TransactionManager) {
-					return (TransactionManager) tx;
+					txManager = (TransactionManager) tx;
+					break;
 				}
 			} catch (NamingException e) {
 				LOGGER.warn("TransactionManager not found at " + jndiAddress);
 			}
 		}
-		throw new NamingException("TransactionManager not found");
+		if (txManager == null) {
+			throw new NamingException("TransactionManager not found");
+		}
 	}
 
 	private static ResourceHolder getHolder() {
 		if (holder == null) {
-			holder = new ResourceHolder();
-			holder.init();
+			init();
 		}
 		return holder;
 	}
