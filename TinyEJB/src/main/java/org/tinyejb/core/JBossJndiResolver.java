@@ -89,6 +89,10 @@ public class JBossJndiResolver implements IJndiResolver {
 	}
 
 	private static class BeanEntry implements Serializable {
+		/**
+		 * 
+		 */
+		private static final long	serialVersionUID	= 1L;
 		String	remoteHomeName;
 		String	localHomeName;
 	}

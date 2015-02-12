@@ -37,7 +37,6 @@ public class HomeServlet extends HttpServlet {
 			out.println("</body>");
 			out.println("</html>");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
