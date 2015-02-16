@@ -168,10 +168,13 @@ public class EJBHomeBuilder {
 
 			} catch (Exception e) {
 				//As determined by EJB spec
-				CreateException ce = new CreateException(e.getMessage());
+				CreateException ce = null;
 				if (e instanceof InvocationTargetException) {
-					ce.initCause(((InvocationTargetException) e).getTargetException());
+					InvocationTargetException ite = (InvocationTargetException) e;
+					ce = new CreateException(ite.getTargetException().getMessage());
+					ce.initCause(ite.getTargetException());
 				} else {
+					ce = new CreateException(e.getMessage());
 					ce.initCause(e);
 				}
 				throw ce;
