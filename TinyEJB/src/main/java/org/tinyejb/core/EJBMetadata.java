@@ -63,7 +63,7 @@ public class EJBMetadata implements Serializable{
 			if(i > 0){
 				b.append(",");
 			}
-			b.append(pType.getName());
+			b.append(pType.getCanonicalName());
 			i++;
 		}
 		
