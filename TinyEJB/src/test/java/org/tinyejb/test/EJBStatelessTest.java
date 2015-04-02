@@ -43,7 +43,7 @@ public class EJBStatelessTest {
 
 	@Parameters(name = "{index}: Invoice {0}, {1} ={2}")
 	public static Iterable<Double[]> data() {
-		List<Double[]> tests = new ArrayList<>();
+		List<Double[]> tests = new ArrayList<Double[]>();
 		for (int i = 0; i < 50; i++) {
 			double totalProductsPrice = random.nextInt(30000);
 			double importFees = random.nextInt(1000);

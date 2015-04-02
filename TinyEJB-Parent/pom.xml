@@ -1,0 +1,110 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.tinyejb</groupId>
+	<artifactId>tinyejb-parent</artifactId>
+	<version>1.0</version>
+	<packaging>pom</packaging>
+	<name>TinyEJB-Parent</name>
+	<description>TinyEJB project pom.xml file</description>
+
+	<licenses>
+		<license>
+			<name>Eclipse Public License - v 1.0</name>
+			<url>http://www.eclipse.org/legal/epl-v10.html</url>
+		</license>
+
+		<license>
+			<name>GNU Lesser General Public License</name>
+			<url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html</url>
+		</license>
+	</licenses>
+
+
+	<modules>
+		<module>tinyejb</module>
+		<module>tinyejb-sample</module>
+	</modules>
+
+	<properties>
+		<!-- target JDK version == source JDK version -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<jdk.version>1.6</jdk.version>
+		<maven.compiler.source>1.6</maven.compiler.source>
+		<maven.compiler.target>1.6</maven.compiler.target>
+		<jdom.version>1.1.3</jdom.version>
+		<junit.version>4.11</junit.version>
+		<logback.version>1.1.2</logback.version>
+		<j2ee.version>1.4</j2ee.version>
+
+		<maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
+		<maven-jar-plugin.version>2.3.1</maven-jar-plugin.version>
+
+	</properties>
+
+	<developers>
+		<developer>
+			<id>gualberto</id>
+			<name>Cláudio Gualberto</name>
+			<email>gualberto@sankhya.com.br</email>
+		</developer>
+
+		<developer>
+			<id>gwoliveira</id>
+			<name>Guilherme Willian de Oliveira</name>
+			<email>gwoliveira@gmail.com</email>
+		</developer>
+
+	</developers>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jdom</groupId>
+			<artifactId>jdom-legacy</artifactId>
+			<version>${jdom.version}</version>
+		</dependency>
+	</dependencies>
+
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- Project modules -->
+			<dependency>
+				<groupId>org.tinyejb</groupId>
+				<artifactId>tinyejb</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>jboss</groupId>
+				<artifactId>jbossall-client</artifactId>
+				<version>4.2.2.GA</version>
+			</dependency>
+			<dependency>
+				<groupId>milyn</groupId>
+				<artifactId>j2ee</artifactId>
+				<version>${j2ee.version}</version>
+				<scope>provided</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<repositories>
+		<repository>
+			<id>Java.Net</id>
+			<url>http://download.java.net/maven/2/</url>
+		</repository>
+	</repositories>
+</project>

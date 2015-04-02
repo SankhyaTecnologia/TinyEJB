@@ -24,7 +24,7 @@ public class EJBMetadataTest {
 	public void testDefaultTxType() {
 
 		assertEquals(TRANSACTION_TYPE.Required, ejbMetadata.getDefaultTxType());
-		List<EJBMethodTransactionInfo> mList = new ArrayList<>();
+		List<EJBMethodTransactionInfo> mList = new ArrayList<EJBMethodTransactionInfo>();
 		mList.add(new EJBMethodTransactionInfo("*", "Unknown@*(void)", TRANSACTION_TYPE.Supports, METHOD_INTF.Unknown));
 
 		ejbMetadata.addMethodTransactionInfo(mList);
