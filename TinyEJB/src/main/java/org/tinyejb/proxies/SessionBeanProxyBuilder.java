@@ -344,7 +344,7 @@ public class SessionBeanProxyBuilder {
 		private void assertRollbackOnly(TransactionManager txManager) throws Exception {
 			Transaction tx = txManager.getTransaction();
 			if (tx != null && tx.getStatus() != Status.STATUS_MARKED_ROLLBACK) {
-				LOGGER.info("System exception, so transaction will rollback!");
+				LOGGER.debug("System exception, so transaction will rollback!");
 				tx.setRollbackOnly();
 			}
 		}
@@ -394,7 +394,7 @@ public class SessionBeanProxyBuilder {
 					if (System.currentTimeMillis() - start > ejbmd.getEjbContainer().getConcurrentCallWaitTimeout()) {
 						throw new IllegalStateException("Timeout waiting for method call on Statefull bean. Method using the instance: '" + beanProxyHnd.statefulMethodLock[0].getName() + "'");
 					}
-					LOGGER.info(m.getName() + " waiting for " + beanProxyHnd.statefulMethodLock[0].getName());
+					LOGGER.debug(m.getName() + " waiting for " + beanProxyHnd.statefulMethodLock[0].getName());
 					beanProxyHnd.statefulMethodLock.wait(1000);
 				}
 				beanProxyHnd.statefulMethodLock[0] = m;
@@ -416,7 +416,7 @@ public class SessionBeanProxyBuilder {
 
 				if (milliseconds > 0) {
 					milliseconds = new Random().nextInt(milliseconds);
-					LOGGER.info("sleeping randomly for " + (milliseconds / 1000) + " secs");
+					LOGGER.debug("sleeping randomly for " + (milliseconds / 1000) + " secs");
 					Thread.sleep(new Random().nextInt(milliseconds));
 				}
 			} catch (Exception ignored) {

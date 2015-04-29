@@ -128,7 +128,7 @@ public class BeanInstancePool {
 
 		@Override
 		public void run() {
-			LOGGER.info("Starting InstancePool resizer task");
+			LOGGER.debug("Starting InstancePool resizer task");
 
 			try {
 				while (!Thread.currentThread().isInterrupted()) {
@@ -153,7 +153,7 @@ public class BeanInstancePool {
 				}
 			} catch (Exception ignored) {
 			} finally {
-				LOGGER.info("InstancePool resizer finalized");
+				LOGGER.debug("InstancePool resizer finalized");
 			}
 
 		}

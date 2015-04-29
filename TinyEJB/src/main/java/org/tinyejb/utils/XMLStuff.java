@@ -17,7 +17,7 @@ public class XMLStuff {
 			Element elem = xmlElem.getChild(elemName);
 
 			if (elem == null) {
-				LOGGER.info("element <" + xmlElem.getName() + "> must contain <" + elemName + "> as a child element");
+				LOGGER.debug("element <" + xmlElem.getName() + "> must contain <" + elemName + "> as a child element");
 				errors++;
 			}
 		}
