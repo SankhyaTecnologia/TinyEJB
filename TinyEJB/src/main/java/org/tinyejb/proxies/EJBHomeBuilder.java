@@ -101,6 +101,8 @@ public class EJBHomeBuilder {
 
 					return newBeanProxy(homeProxy, method, args);
 
+				}else if (Object.class.equals(methodDeclaringClass)) {
+					return method.invoke(homeProxy, args);
 				} else {
 					throwMethodNotSupportedError(method);
 				}
